@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Test – Samspill i naturen</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Literata:opsz,wght@7..72,600;7..72,700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg:#eef4ef;
+  --card:#ffffff;
+  --ink:#183025;
+  --muted:#6f7f76;
+  --line:#d9e5dc;
+  --accent:#28724d;
+  --accent-soft:#e4f2e9;
+  --wrong:#a94343;
+  --right:#247245;
+  --shadow:0 18px 60px rgba(26,63,43,.11);
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:linear-gradient(180deg,#edf4ef 0%,#f8faf8 100%);color:var(--ink)}
+body{font-family:"DM Sans",system-ui,sans-serif}
+button,input{font:inherit}
+button{cursor:pointer}
+
+.app{
+  min-height:100vh;
+  display:grid;
+  grid-template-rows:auto 1fr auto;
+  max-width:1100px;
+  margin:auto;
+  padding:22px;
+}
+
+.topbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:20px;
+  margin-bottom:18px;
+}
+.brand{
+  display:flex;align-items:center;gap:12px;font-weight:700;
+}
+.brand-mark{
+  width:42px;height:42px;border-radius:13px;
+  background:var(--accent);
+  display:grid;place-items:center;color:white;font-size:22px;
+  box-shadow:0 8px 24px rgba(40,114,77,.22);
+}
+.progress-wrap{flex:1;max-width:520px}
+.progress-label{display:flex;justify-content:space-between;color:var(--muted);font-size:14px;margin-bottom:7px}
+.progress{height:9px;background:#dfe9e2;border-radius:999px;overflow:hidden}
+.progress > div{height:100%;background:var(--accent);width:5%;transition:.25s ease}
+
+.card{
+  background:var(--card);
+  border:1px solid rgba(44,86,61,.08);
+  border-radius:28px;
+  box-shadow:var(--shadow);
+  padding:clamp(24px,4vw,48px);
+  align-self:center;
+}
+.kicker{
+  text-transform:uppercase;letter-spacing:.14em;font-size:12px;font-weight:700;color:var(--accent);
+}
+h1{
+  font-family:"Literata",Georgia,serif;
+  font-size:clamp(30px,4vw,48px);
+  margin:7px 0 8px;
+  line-height:1.08;
+}
+.instruction{margin:0 0 30px;color:var(--muted);font-size:16px}
+
+.interaction{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:12px;
+  margin:28px 0 34px;
+}
+.organism{
+  width:min(560px,100%);
+  min-height:145px;
+  border:1px solid var(--line);
+  background:linear-gradient(180deg,#ffffff 0%,#f8fbf9 100%);
+  border-radius:22px;
+  padding:20px 24px;
+  display:grid;
+  grid-template-columns:110px 1fr auto;
+  align-items:center;
+  gap:18px;
+  box-shadow:0 8px 28px rgba(26,63,43,.05);
+}
+.silhouette{
+  width:102px;height:74px;
+  color:#1f3028;
+  filter:drop-shadow(0 5px 5px rgba(24,48,37,.12));
+}
+.silhouette svg{width:100%;height:100%;display:block;fill:currentColor}
+.org-name{font-weight:700;font-size:22px;text-align:left}
+.org-note{font-size:13px;color:var(--muted);margin-top:3px}
+.org-sign{
+  font-family:"Literata",Georgia,serif;
+  font-size:44px;
+  font-weight:700;
+  line-height:1;
+  color:var(--accent);
+}
+.signs{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  margin:-2px 0;
+}
+.arrow{
+  font-family:"DM Sans",sans-serif;
+  font-size:58px;
+  line-height:.8;
+  color:var(--accent);
+}
+.sign-caption{font-size:12px;color:var(--muted);margin-top:7px}
+
+.question-title{
+  font-family:"Literata",Georgia,serif;
+  font-size:23px;
+  margin:0 0 14px;
+}
+.choices{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px;
+}
+.choice{
+  position:relative;
+}
+.choice input{
+  position:absolute;
+  opacity:0;
+  pointer-events:none;
+}
+.choice label{
+  border:1.5px solid var(--line);
+  border-radius:16px;
+  min-height:62px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:12px 14px;
+  font-weight:700;
+  transition:.18s ease;
+  background:white;
+}
+.choice input:checked + label{
+  border-color:var(--accent);
+  background:var(--accent-soft);
+  box-shadow:0 0 0 3px rgba(40,114,77,.08);
+}
+
+.symbiosis-box{
+  display:none;
+  margin-top:16px;
+  padding:18px;
+  background:#f7faf8;
+  border:1px dashed #bdd2c4;
+  border-radius:18px;
+}
+.symbiosis-box.show{display:block;animation:fade .2s ease}
+.symbiosis-box p{margin:0 0 12px;font-weight:700}
+.subchoices{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+}
+.subchoice input{position:absolute;opacity:0;pointer-events:none}
+.subchoice label{
+  display:block;text-align:center;padding:11px 12px;border:1.5px solid var(--line);
+  border-radius:13px;background:#fff;font-weight:600;
+}
+.subchoice input:checked + label{border-color:var(--accent);background:var(--accent-soft)}
+
+.feedback{
+  min-height:52px;
+  margin-top:18px;
+  border-radius:14px;
+  padding:14px 16px;
+  display:none;
+}
+.feedback.show{display:block}
+.feedback.correct{background:#e7f5eb;color:#1f633c}
+.feedback.wrong{background:#fbeaea;color:#8a3535}
+
+.footer{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  margin-top:20px;
+}
+.navgroup{display:flex;gap:10px}
+.btn{
+  border:0;border-radius:14px;padding:12px 18px;font-weight:700;
+}
+.btn.secondary{background:white;border:1px solid var(--line);color:var(--ink)}
+.btn.primary{background:var(--accent);color:white}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.score{color:var(--muted);font-size:14px}
+
+.result{
+  text-align:center;padding:20px 0 8px;
+}
+.result .big{font-family:"Literata",serif;font-size:64px;font-weight:700;color:var(--accent)}
+.result p{color:var(--muted);font-size:18px}
+.result .btn{margin-top:10px}
+
+@keyframes fade{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+
+@media(max-width:760px){
+  .organism{grid-template-columns:82px 1fr auto;padding:17px}
+  .silhouette{width:76px;height:58px}
+  .org-name{font-size:18px}
+  .org-sign{font-size:38px}
+  .choices,.subchoices{grid-template-columns:1fr}
+  .topbar{align-items:flex-start;flex-direction:column}
+  .progress-wrap{width:100%;max-width:none}
+}
+</style>
+</head>
+
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark">↔</div>
+      <div>Samspill i naturen</div>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-label">
+        <span id="progressText">Oppgave 1 av 20</span>
+        <span id="scoreText">0 poeng</span>
+      </div>
+      <div class="progress"><div id="progressBar"></div></div>
+    </div>
+  </header>
+
+  <main class="card" id="card"></main>
+
+  <footer class="footer">
+    <div class="score">Velg hovedtype. Ved symbiose velger du også undertype.</div>
+    <div class="navgroup">
+      <button class="btn secondary" id="backBtn">Tilbake</button>
+      <button class="btn primary" id="nextBtn">Neste</button>
+    </div>
+  </footer>
+</div>
+
+<script>
+const questions = [
+  {a:"Rødrev",aType:"canid",b:"Fjellrev",bType:"canid",sa:"−",sb:"−",main:"Konkurranse",why:"Begge artene påvirkes negativt fordi de konkurrerer om blant annet mat og leveområder."},
+  {a:"Gran",aType:"tree",b:"Bjørk",bType:"tree",sa:"−",sb:"−",main:"Konkurranse",why:"Begge taper på konkurransen om lys, vann, plass og næringsstoffer."},
+  {a:"Løve",aType:"cat",b:"Flekkhyene",bType:"canid",sa:"−",sb:"−",main:"Konkurranse",why:"De konkurrerer om mange av de samme byttedyrene og om åtsler."},
+  {a:"Ulv",aType:"canid",b:"Prærieulv",bType:"canid",sa:"−",sb:"−",main:"Konkurranse",why:"Begge kan tape fordi de bruker overlappende områder og noen av de samme ressursene."},
+
+  {a:"Gaupe",aType:"cat",b:"Rådyr",bType:"deer",sa:"+",sb:"−",main:"Bytte–rovdyr",why:"Gaupa får mat, mens rådyret taper fordi det er byttet."},
+  {a:"Ulv",aType:"canid",b:"Elg",bType:"deer",sa:"+",sb:"−",main:"Bytte–rovdyr",why:"Ulven får energi fra byttet, mens elgen påvirkes negativt."},
+  {a:"Isbjørn",aType:"bear",b:"Ringsel",bType:"seal",sa:"+",sb:"−",main:"Bytte–rovdyr",why:"Isbjørnen jakter på ringsel og får mat fra byttet."},
+  {a:"Gepard",aType:"cat",b:"Gaselle",bType:"deer",sa:"+",sb:"−",main:"Bytte–rovdyr",why:"Geparden får mat ved å jakte på gasellen."},
+
+  {a:"Humle",aType:"insect",b:"Blomsterplante",bType:"flower",sa:"+",sb:"+",main:"Symbiose",sub:"Mutualisme",why:"Humla får nektar eller pollen, mens blomsterplanten blir pollinert. Begge har fordel."},
+  {a:"Mykorrhizasopp",aType:"mushroom",b:"Gran",bType:"tree",sa:"+",sb:"+",main:"Symbiose",sub:"Mutualisme",why:"Soppen får sukker fra treet, og treet får bedre tilgang på vann og mineraler."},
+  {a:"Maur",aType:"insect",b:"Bladlus",bType:"insect",sa:"+",sb:"+",main:"Symbiose",sub:"Mutualisme",why:"Maur får honningdugg, mens bladlusene kan få beskyttelse mot fiender."},
+  {a:"Klovnefisk",aType:"fish",b:"Sjøanemone",bType:"anemone",sa:"+",sb:"+",main:"Symbiose",sub:"Mutualisme",why:"Klovnefisken får beskyttelse, og sjøanemonen får fordeler som matrester og rengjøring."},
+
+  {a:"Mose",aType:"plant",b:"Tre",bType:"tree",sa:"+",sb:"0",main:"Symbiose",sub:"Kommensalisme",why:"Mosen får et voksested, mens treet vanligvis påvirkes svært lite."},
+  {a:"Lav",aType:"plant",b:"Tre",bType:"tree",sa:"+",sb:"0",main:"Symbiose",sub:"Kommensalisme",why:"Laven bruker barken som underlag uten å hente næring direkte fra treet."},
+  {a:"Remora",aType:"fish",b:"Hai",bType:"shark",sa:"+",sb:"0",main:"Symbiose",sub:"Kommensalisme",why:"Remoraen får transport og matrester, mens haien vanligvis påvirkes lite."},
+  {a:"Epifyttisk orkidé",aType:"flower",b:"Tre",bType:"tree",sa:"+",sb:"0",main:"Symbiose",sub:"Kommensalisme",why:"Orkideen bruker treet som støtte for å komme opp mot lyset, uten å ta næring fra det."},
+
+  {a:"Flått",aType:"insect",b:"Hjort",bType:"deer",sa:"+",sb:"−",main:"Symbiose",sub:"Parasittisme",why:"Flåtten får næring ved å suge blod, mens hjorten påvirkes negativt."},
+  {a:"Lakselus",aType:"insect",b:"Laks",bType:"fish",sa:"+",sb:"−",main:"Symbiose",sub:"Parasittisme",why:"Lakselusa får næring fra laksen og kan skade hud og vev hos verten."},
+  {a:"Gjøk",aType:"bird",b:"Småfugl",bType:"bird",sa:"+",sb:"−",main:"Symbiose",sub:"Parasittisme",why:"Gjøken får andre fugler til å fostre opp ungen dens, noe som koster vertsfuglen ressurser."},
+  {a:"Misteltein",aType:"plant",b:"Tre",bType:"tree",sa:"+",sb:"−",main:"Symbiose",sub:"Parasittisme",why:"Mistelteinen henter vann og mineraler fra vertstreet."}
+];
+
+const silhouettes = {
+canid:`<svg viewBox="0 0 140 90"><path d="M8 58c9-7 19-15 28-24 12-11 28-15 45-11l13 3 13-13 11 3 9-8 3 16 10 12-8 10-17 3-12 20h-9l3-20-29-2-12 22h-9l8-24-13 5-17 13-17-5z"/><path d="M107 22l7-15 4 16z"/></svg>`,
+cat:`<svg viewBox="0 0 140 90"><path d="M9 60c10-8 20-17 29-27 13-14 30-18 49-12l13 4 8-15 8 9 11-9 2 18 10 10-8 10-19 1-9 20h-9l3-20-31-2-11 22h-9l7-23-16 9-15 9-12-4z"/><path d="M114 14l5-12 6 14z"/></svg>`,
+deer:`<svg viewBox="0 0 140 90"><path d="M9 57c12-8 25-14 40-18 14-4 27-3 39 2l9-14 2-16 5 12 8-18 2 19 8-13 0 18 12 10-6 9-18 0-10 21h-8l4-22-36-1-10 23h-9l7-24-16 5-15 11-8-4z"/></svg>`,
+bear:`<svg viewBox="0 0 140 90"><path d="M9 59c5-18 17-31 36-37 17-6 34-5 50 2l9-6 10 2 8 7 7 13 2 10-10 7-17 2-9 10h-10l3-14-39 1-3 13h-10l2-14-14 4-15 0z"/><circle cx="111" cy="24" r="5"/></svg>`,
+seal:`<svg viewBox="0 0 140 90"><path d="M10 54c12-18 29-28 51-29 24-1 43 10 58 28l14-9-5 16 10 8-18 0c-14 8-31 12-50 10-25-2-45-10-60-24z"/></svg>`,
+tree:`<svg viewBox="0 0 140 90"><path d="M66 86h10V56h22L82 42h13L72 11 49 42h13L46 56h20v30z"/><path d="M54 66h36v6H54z"/></svg>`,
+flower:`<svg viewBox="0 0 140 90"><path d="M67 86h7V51c-14-5-21-14-21-26 11 0 19 5 25 15 0-13 5-23 15-30 8 10 9 21 4 33 9-7 19-8 30-4-4 13-13 21-28 23l-25-5v29z"/><circle cx="74" cy="45" r="8"/></svg>`,
+plant:`<svg viewBox="0 0 140 90"><path d="M65 86h8V52c-16-4-28-14-36-30 17-1 29 6 36 22 2-18 12-31 29-39 3 18-3 32-18 43 13-4 25-1 36 8-10 11-24 15-42 10l-5-2v22z"/></svg>`,
+mushroom:`<svg viewBox="0 0 140 90"><path d="M26 49c3-22 21-38 44-38s41 16 44 38H26z"/><path d="M59 52h22l4 34H55l4-34z"/><path d="M43 40c7-7 15-11 25-12M88 31c6 3 10 6 13 11" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"/></svg>`,
+insect:`<svg viewBox="0 0 140 90"><ellipse cx="70" cy="46" rx="13" ry="23"/><ellipse cx="70" cy="22" rx="9" ry="8"/><path d="M57 38 34 23l3 20-20 7 24 7 9 17 9-22M83 38l23-15-3 20 20 7-24 7-9 17-9-22M64 15 53 4M76 15 87 4" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round"/></svg>`,
+fish:`<svg viewBox="0 0 140 90"><path d="M13 46 39 23v14c22-16 52-15 85 9-33 24-63 25-85 9v14L13 46z"/><circle cx="105" cy="41" r="3" fill="#fff"/></svg>`,
+shark:`<svg viewBox="0 0 140 90"><path d="M8 49 32 29v13c22-10 41-11 57-5l13-22 3 24 25 10-24 9-12 17-4-16c-20 7-39 6-58-4v13L8 49z"/><path d="M101 49l12 5-12 4z" fill="#fff"/></svg>`,
+bird:`<svg viewBox="0 0 140 90"><path d="M10 58c21-1 38-10 51-28 11 11 22 18 35 21l24-12-11 19 20 8-28 1c-14 10-31 12-49 5L34 86l5-19c-11-2-21-5-29-9z"/></svg>`,
+anemone:`<svg viewBox="0 0 140 90"><path d="M51 86h38l-5-27c10-10 16-24 17-42-9 5-16 13-21 24 2-16-2-28-10-39-6 12-8 25-6 39-7-12-15-20-27-25 2 17 8 31 19 43l-5 27z"/></svg>`
+};
+
+let order = [...questions.keys()];
+function shuffleOrder(){
+  for(let i=order.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [order[i],order[j]]=[order[j],order[i]];
+  }
+}
+shuffleOrder();
+let index = 0;
+let answers = Array(questions.length).fill(null);
+let checked = Array(questions.length).fill(false);
+
+const card = document.getElementById("card");
+const backBtn = document.getElementById("backBtn");
+const nextBtn = document.getElementById("nextBtn");
+const progressText = document.getElementById("progressText");
+const progressBar = document.getElementById("progressBar");
+const scoreText = document.getElementById("scoreText");
+
+function pointsFor(i){
+  const qi = order[i];
+  const a = answers[i];
+  if(!a) return 0;
+  const q = questions[qi];
+  if(a.main !== q.main) return 0;
+  if(q.main === "Symbiose" && a.sub !== q.sub) return 0;
+  return 1;
+}
+function totalScore(){ return answers.reduce((s,_,i)=>s+pointsFor(i),0); }
+
+function render(){
+  const qi = order[index];
+  const q = questions[qi];
+  const a = answers[index] || {main:"",sub:""};
+  progressText.textContent = `Oppgave ${index+1} av ${questions.length}`;
+  progressBar.style.width = `${((index+1)/questions.length)*100}%`;
+  scoreText.textContent = `${totalScore()} poeng`;
+
+  card.innerHTML = `
+    <div class="kicker">Oppgave ${index+1}</div>
+    <h1>Hvilket samspill ser du?</h1>
+    <p class="instruction">Tegnene viser hvordan hver organisme påvirkes av samspillet.</p>
+
+    <section class="interaction">
+      <div class="organism">
+        <div class="silhouette">${silhouettes[q.aType]}</div>
+        <div class="org-name">${q.a}</div>
+        <div class="org-sign">${q.sa}</div>
+      </div>
+
+      <div class="signs">
+        <div class="arrow">↕</div>
+        <div class="sign-caption">samspill mellom artene</div>
+      </div>
+
+      <div class="organism">
+        <div class="silhouette">${silhouettes[q.bType]}</div>
+        <div class="org-name">${q.b}</div>
+        <div class="org-sign">${q.sb}</div>
+      </div>
+    </section>
+
+    <h2 class="question-title">Velg hovedtype</h2>
+    <div class="choices">
+      ${["Konkurranse","Bytte–rovdyr","Symbiose"].map(x=>`
+        <div class="choice">
+          <input type="radio" name="main" id="main-${x}" value="${x}" ${a.main===x?"checked":""} ${checked[index]?"disabled":""}>
+          <label for="main-${x}">${x}</label>
+        </div>
+      `).join("")}
+    </div>
+
+    <div class="symbiosis-box ${a.main==="Symbiose"?"show":""}" id="symbiosisBox">
+      <p>Hvilken type symbiose?</p>
+      <div class="subchoices">
+        ${["Mutualisme","Kommensalisme","Parasittisme"].map(x=>`
+          <div class="subchoice">
+            <input type="radio" name="sub" id="sub-${x}" value="${x}" ${a.sub===x?"checked":""} ${checked[index]?"disabled":""}>
+            <label for="sub-${x}">${x}</label>
+          </div>
+        `).join("")}
+      </div>
+    </div>
+
+    <div class="feedback ${checked[index] ? "show "+(pointsFor(index)?"correct":"wrong") : ""}" id="feedback">
+      ${checked[index] ? feedbackText(index) : ""}
+    </div>
+  `;
+
+  card.querySelectorAll('input[name="main"]').forEach(el=>{
+    el.addEventListener("change",e=>{
+      answers[index] = answers[index] || {main:"",sub:""};
+      answers[index].main = e.target.value;
+      if(e.target.value !== "Symbiose") answers[index].sub = "";
+      checked[index] = false;
+      render();
+    });
+  });
+
+  card.querySelectorAll('input[name="sub"]').forEach(el=>{
+    el.addEventListener("change",e=>{
+      answers[index] = answers[index] || {main:"Symbiose",sub:""};
+      answers[index].main = "Symbiose";
+      answers[index].sub = e.target.value;
+      checked[index] = false;
+      render();
+    });
+  });
+
+  backBtn.disabled = index === 0;
+  nextBtn.textContent = checked[index] ? (index === questions.length-1 ? "Se resultat" : "Neste oppgave") : "Sjekk svar";
+}
+
+function feedbackText(i){
+  const q=questions[order[i]];
+  if(pointsFor(i)){
+    return `<strong>Riktig!</strong> ${q.main}${q.sub ? " – "+q.sub : ""}.<br>${q.why}`;
+  }
+  return `<strong>Ikke helt.</strong> Riktig svar er ${q.main}${q.sub ? " – "+q.sub : ""}.<br>${q.why}`;
+}
+
+backBtn.addEventListener("click",()=>{
+  if(index>0){ index--; render(); }
+});
+
+nextBtn.addEventListener("click",()=>{
+  const a = answers[index];
+  if(!checked[index]){
+    if(!a || !a.main || (a.main==="Symbiose" && !a.sub)){
+      const fb = document.getElementById("feedback");
+      fb.className = "feedback show wrong";
+      fb.textContent = "Velg et svar før du sjekker.";
+      return;
+    }
+    checked[index] = true;
+    render();
+    nextBtn.textContent = index === questions.length-1 ? "Se resultat" : "Neste oppgave";
+    return;
+  }
+
+  if(index < questions.length-1){
+    index++;
+    render();
+  } else {
+    showResult();
+  }
+});
+
+function showResult(){
+  const score = totalScore();
+  progressText.textContent = "Ferdig";
+  progressBar.style.width = "100%";
+  scoreText.textContent = `${score} poeng`;
+  backBtn.style.display = "none";
+  nextBtn.style.display = "none";
+
+  const percent = Math.round(score/questions.length*100);
+  let text = percent >= 90 ? "Svært godt!" :
+             percent >= 75 ? "God kontroll på samspill." :
+             percent >= 50 ? "Mye er på plass – øv litt til på forskjellene." :
+             "Ta en ny runde og bruk +/−-tegnene aktivt.";
+
+  card.innerHTML = `
+    <div class="result">
+      <div class="kicker">Resultat</div>
+      <h1>Testen er ferdig</h1>
+      <div class="big">${score} / ${questions.length}</div>
+      <p>${text}</p>
+      <button class="btn primary" onclick="restart()">Ta testen på nytt</button>
+    </div>
+  `;
+}
+
+function restart(){
+  order=[...questions.keys()];
+  shuffleOrder();
+  index=0;
+  answers=Array(questions.length).fill(null);
+  checked=Array(questions.length).fill(false);
+  backBtn.style.display="";
+  nextBtn.style.display="";
+  render();
+}
+
+render();
+</script>
+</body>
+</html>
