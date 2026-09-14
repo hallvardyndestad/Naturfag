@@ -1,0 +1,1003 @@
+
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Kjemi - periodesystemet</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+
+    font-family: Arial, Helvetica, sans-serif;
+
+    background: #f5f7f8;
+    color: #20252b;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container {
+    width: 100%;
+    max-width: 720px;
+    padding: 30px;
+}
+
+/* ---------------- HEADER ---------------- */
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    margin-bottom: 28px;
+}
+
+.title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.chem-logo {
+    width: 34px;
+    height: 34px;
+    flex: 0 0 auto;
+    display: block;
+}
+
+.progress {
+    font-size: 14px;
+    color: #6b737c;
+}
+
+/* ---------------- CARD ---------------- */
+
+.card {
+    background: white;
+
+    border-radius: 18px;
+
+    padding: 48px;
+
+    box-shadow:
+        0 8px 30px rgba(0, 0, 0, 0.06);
+}
+
+/* ---------------- OPPGAVE ---------------- */
+
+.topic {
+    font-size: 14px;
+    color: #66727d;
+
+    margin-bottom: 24px;
+
+    letter-spacing: 0.5px;
+}
+
+.element {
+    font-size: 42px;
+    font-weight: 600;
+
+    margin-bottom: 28px;
+}
+
+.question {
+    font-size: 22px;
+    line-height: 1.45;
+
+    margin-bottom: 28px;
+}
+
+/* ---------------- INPUT ---------------- */
+
+input {
+    width: 100%;
+
+    padding: 15px 16px;
+
+    font-size: 20px;
+
+    border: 1px solid #cfd5da;
+    border-radius: 10px;
+
+    outline: none;
+}
+
+input:focus {
+    border-color: #667f91;
+}
+
+/* ---------------- KNAPPER ---------------- */
+
+button {
+    margin-top: 16px;
+
+    padding: 13px 22px;
+
+    border: none;
+    border-radius: 10px;
+
+    background: #405968;
+    color: white;
+
+    font-size: 16px;
+
+    cursor: pointer;
+}
+
+button:hover {
+    background: #334955;
+}
+
+button:disabled {
+    cursor: default;
+}
+
+/* ---------------- FEEDBACK ---------------- */
+
+.feedback {
+    margin-top: 24px;
+
+    padding-top: 20px;
+
+    border-top: 1px solid #e5e8eb;
+
+    font-size: 17px;
+    line-height: 1.5;
+}
+
+.feedback strong {
+    font-weight: 600;
+}
+
+.next {
+    display: none;
+}
+
+/* ---------------- SLUTT ---------------- */
+
+.resultat {
+    display: none;
+}
+
+.resultat-tittel {
+    font-size: 30px;
+    font-weight: 600;
+
+    margin-bottom: 20px;
+}
+
+.poeng {
+    font-size: 22px;
+
+    margin-bottom: 28px;
+}
+
+.forbedre {
+    font-size: 17px;
+    line-height: 1.6;
+}
+
+/* ---------------- FOOTER ---------------- */
+
+.footer {
+    text-align: center;
+
+    margin-top: 24px;
+
+    font-size: 13px;
+
+    color: #8a9299;
+}
+
+</style>
+</head>
+
+
+<body>
+
+<div class="container">
+
+    <!-- HEADER -->
+
+    <div class="header">
+
+        <div class="title">
+            <svg class="chem-logo" viewBox="0 0 64 64" aria-hidden="true">
+                <g fill="none" stroke="#405968" stroke-width="2.4" stroke-linecap="round">
+                    <ellipse cx="32" cy="32" rx="25" ry="9" transform="rotate(0 32 32)"/>
+                    <ellipse cx="32" cy="32" rx="25" ry="9" transform="rotate(60 32 32)"/>
+                    <ellipse cx="32" cy="32" rx="25" ry="9" transform="rotate(120 32 32)"/>
+                </g>
+                <circle cx="32" cy="32" r="5.5" fill="#405968"/>
+                <circle cx="57" cy="32" r="3.5" fill="#667f91"/>
+                <circle cx="19.5" cy="10.4" r="3.5" fill="#667f91"/>
+                <circle cx="19.5" cy="53.6" r="3.5" fill="#667f91"/>
+            </svg>
+            KJEMI
+        </div>
+
+        <div class="progress" id="progress">
+            Oppgave 1 av 15
+        </div>
+
+    </div>
+
+
+    <!-- OPPGAVEKORT -->
+
+    <div class="card" id="oppgaveKort">
+
+        <div class="topic">
+            PERIODESYSTEMET
+        </div>
+
+        <div class="element" id="element">
+            Magnesium
+        </div>
+
+        <div class="question" id="question">
+            Hva er symbolet for magnesium?
+        </div>
+
+        <input
+            id="svar"
+            type="text"
+            placeholder="Skriv svaret her"
+            autocomplete="off"
+        >
+
+        <button id="sjekk" onclick="sjekkSvar()">
+            Sjekk svar
+        </button>
+
+        <div id="feedback" class="feedback"></div>
+
+        <button
+            id="neste"
+            class="next"
+            onclick="nesteOppgave()">
+            Neste oppgave →
+        </button>
+
+    </div>
+
+
+    <!-- RESULTAT -->
+
+    <div class="card resultat" id="resultat">
+
+        <div class="resultat-tittel">
+            Ferdig!
+        </div>
+
+        <div class="poeng" id="poeng">
+        </div>
+
+        <div class="forbedre" id="forbedre">
+        </div>
+
+        <button onclick="startPåNytt()">
+            Start på nytt
+        </button>
+
+    </div>
+
+
+    <div class="footer">
+        Bruk periodesystemet aktivt.
+    </div>
+
+</div>
+
+
+<script>
+
+
+/* =========================================================
+   GRUNNSTOFFER
+   ========================================================= */
+
+const grunnstoffer = [
+
+    { navn: "Hydrogen", symbol: "H", atomnummer: 1, ytterelektroner: 1 },
+
+    { navn: "Helium", symbol: "He", atomnummer: 2, ytterelektroner: 2 },
+
+    { navn: "Litium", symbol: "Li", atomnummer: 3, ytterelektroner: 1 },
+
+    { navn: "Beryllium", symbol: "Be", atomnummer: 4, ytterelektroner: 2 },
+
+    { navn: "Bor", symbol: "B", atomnummer: 5, ytterelektroner: 3 },
+
+    { navn: "Karbon", symbol: "C", atomnummer: 6, ytterelektroner: 4 },
+
+    { navn: "Nitrogen", symbol: "N", atomnummer: 7, ytterelektroner: 5 },
+
+    { navn: "Oksygen", symbol: "O", atomnummer: 8, ytterelektroner: 6 },
+
+    { navn: "Fluor", symbol: "F", atomnummer: 9, ytterelektroner: 7 },
+
+    { navn: "Neon", symbol: "Ne", atomnummer: 10, ytterelektroner: 8 },
+
+    { navn: "Natrium", symbol: "Na", atomnummer: 11, ytterelektroner: 1 },
+
+    { navn: "Magnesium", symbol: "Mg", atomnummer: 12, ytterelektroner: 2 },
+
+    { navn: "Aluminium", symbol: "Al", atomnummer: 13, ytterelektroner: 3 },
+
+    { navn: "Silisium", symbol: "Si", atomnummer: 14, ytterelektroner: 4 },
+
+    { navn: "Fosfor", symbol: "P", atomnummer: 15, ytterelektroner: 5 },
+
+    { navn: "Svovel", symbol: "S", atomnummer: 16, ytterelektroner: 6 },
+
+    { navn: "Klor", symbol: "Cl", atomnummer: 17, ytterelektroner: 7 },
+
+    { navn: "Argon", symbol: "Ar", atomnummer: 18, ytterelektroner: 8 },
+
+    { navn: "Kalium", symbol: "K", atomnummer: 19, ytterelektroner: 1 },
+
+    { navn: "Kalsium", symbol: "Ca", atomnummer: 20, ytterelektroner: 2 },
+
+    { navn: "Gallium", symbol: "Ga", atomnummer: 31, ytterelektroner: 3 },
+
+    { navn: "Germanium", symbol: "Ge", atomnummer: 32, ytterelektroner: 4 },
+
+    { navn: "Arsen", symbol: "As", atomnummer: 33, ytterelektroner: 5 },
+
+    { navn: "Selen", symbol: "Se", atomnummer: 34, ytterelektroner: 6 },
+
+    { navn: "Brom", symbol: "Br", atomnummer: 35, ytterelektroner: 7 },
+
+    { navn: "Krypton", symbol: "Kr", atomnummer: 36, ytterelektroner: 8 }
+
+];
+
+
+/* =========================================================
+   OPPGAVETYPER
+   ========================================================= */
+
+const oppgavetyper = [
+
+    "symbol",
+    "atomnummer",
+    "protoner",
+    "elektroner",
+    "ytterelektroner"
+
+];
+
+
+/* =========================================================
+   VARIABLER
+   ========================================================= */
+
+let oppgaver = [];
+
+let oppgaveNr = 0;
+
+let poeng = 0;
+
+let ferdig = false;
+
+let statistikk = {
+    symbol: { riktig: 0, totalt: 0 },
+    atomnummer: { riktig: 0, totalt: 0 },
+    protoner: { riktig: 0, totalt: 0 },
+    elektroner: { riktig: 0, totalt: 0 },
+    ytterelektroner: { riktig: 0, totalt: 0 }
+};
+
+
+/* =========================================================
+   HJELPEFUNKSJONER
+   ========================================================= */
+
+function bland(array) {
+
+    return [...array].sort(() => Math.random() - 0.5);
+
+}
+
+
+/* =========================================================
+   LAG OPPGAVER
+   ========================================================= */
+
+function lagOppgaver() {
+
+    const elementer = bland(grunnstoffer);
+
+    const nyeOppgaver = [];
+
+
+    /*
+       De fire første oppgavene har fast progresjon.
+    */
+
+    nyeOppgaver.push({
+        element: elementer[0],
+        type: "symbol"
+    });
+
+    nyeOppgaver.push({
+        element: elementer[1],
+        type: "atomnummer"
+    });
+
+    nyeOppgaver.push({
+        element: elementer[2],
+        type: "protoner"
+    });
+
+    nyeOppgaver.push({
+        element: elementer[3],
+        type: "elektroner"
+    });
+
+
+    /*
+       Oppgave 5–15 blandes.
+       
+       Vi lager først en balansert liste med
+       oppgavetyper og blander den.
+    */
+
+    let blandedeTyper = [
+
+        "symbol",
+        "atomnummer",
+        "protoner",
+        "elektroner",
+        "ytterelektroner",
+
+        "symbol",
+        "atomnummer",
+        "protoner",
+        "elektroner",
+        "ytterelektroner",
+
+        "symbol"
+
+    ];
+
+    blandedeTyper = bland(blandedeTyper);
+
+
+    for (let i = 0; i < 11; i++) {
+
+        nyeOppgaver.push({
+            element: elementer[i + 4],
+            type: blandedeTyper[i]
+        });
+
+    }
+
+
+    return nyeOppgaver;
+}
+
+
+/* =========================================================
+   TEKST TIL OPPGAVEN
+   ========================================================= */
+
+function hentSpørsmål(type, element) {
+
+    if (type === "symbol") {
+
+        return "Hva er symbolet for " +
+               element.navn.toLowerCase() +
+               "?";
+
+    }
+
+    if (type === "atomnummer") {
+
+        return "Hva er atomnummeret til " +
+               element.navn.toLowerCase() +
+               "?";
+
+    }
+
+    if (type === "protoner") {
+
+        return "Hvor mange protoner har " +
+               element.navn.toLowerCase() +
+               "?";
+
+    }
+
+    if (type === "elektroner") {
+
+        return "Hvor mange elektroner har et nøytralt atom av " +
+               element.navn.toLowerCase() +
+               "?";
+
+    }
+
+    if (type === "ytterelektroner") {
+
+        return "Hvor mange elektroner er det i ytterste skall hos " +
+               element.navn.toLowerCase() +
+               "?";
+
+    }
+
+}
+
+
+/* =========================================================
+   RIKTIG SVAR
+   ========================================================= */
+
+function hentRiktigSvar(type, element) {
+
+    if (type === "symbol") {
+        return element.symbol;
+    }
+
+    if (type === "atomnummer") {
+        return String(element.atomnummer);
+    }
+
+    if (type === "protoner") {
+        return String(element.atomnummer);
+    }
+
+    if (type === "elektroner") {
+        return String(element.atomnummer);
+    }
+
+    if (type === "ytterelektroner") {
+        return String(element.ytterelektroner);
+    }
+
+}
+
+
+/* =========================================================
+   FORKLARING
+   ========================================================= */
+
+function hentForklaring(type, element) {
+
+    if (type === "symbol") {
+
+        return "Symbolet for " +
+               element.navn.toLowerCase() +
+               " er <strong>" +
+               element.symbol +
+               "</strong>.";
+
+    }
+
+
+    if (type === "atomnummer") {
+
+        return element.navn +
+               " har atomnummer <strong>" +
+               element.atomnummer +
+               "</strong>.";
+
+    }
+
+
+    if (type === "protoner") {
+
+        return "Atomnummeret viser hvor mange protoner " +
+               "grunnstoffet har. " +
+               element.navn +
+               " har derfor <strong>" +
+               element.atomnummer +
+               "</strong> protoner.";
+
+    }
+
+
+    if (type === "elektroner") {
+
+        return "Et nøytralt atom har like mange elektroner " +
+               "som protoner. " +
+               element.navn +
+               " har derfor <strong>" +
+               element.atomnummer +
+               "</strong> elektroner.";
+
+    }
+
+
+    if (type === "ytterelektroner") {
+
+        return element.navn +
+               " har <strong>" +
+               element.ytterelektroner +
+               "</strong> elektroner i ytterste skall.";
+
+    }
+
+}
+
+
+/* =========================================================
+   VIS OPPGAVE
+   ========================================================= */
+
+function visOppgave() {
+
+    ferdig = false;
+
+    const oppgave = oppgaver[oppgaveNr];
+
+    document.getElementById("progress").textContent =
+        "Oppgave " +
+        (oppgaveNr + 1) +
+        " av " +
+        oppgaver.length;
+
+    document.getElementById("element").textContent =
+        oppgave.element.navn;
+
+    document.getElementById("question").textContent =
+        hentSpørsmål(
+            oppgave.type,
+            oppgave.element
+        );
+
+    const felt = document.getElementById("svar");
+
+    felt.value = "";
+    felt.disabled = false;
+
+    document.getElementById("sjekk").style.display =
+        "inline-block";
+
+    document.getElementById("neste").style.display =
+        "none";
+
+    document.getElementById("feedback").innerHTML =
+        "";
+
+    felt.focus();
+}
+
+
+/* =========================================================
+   SJEKK SVAR
+   ========================================================= */
+
+function sjekkSvar() {
+
+    if (ferdig) {
+        return;
+    }
+
+    const oppgave = oppgaver[oppgaveNr];
+
+    const felt = document.getElementById("svar");
+
+    let svar = felt.value.trim();
+
+    const riktigSvar =
+        hentRiktigSvar(
+            oppgave.type,
+            oppgave.element
+        );
+
+
+    /*
+       Symboler behandles uten hensyn til store/små bokstaver.
+    */
+
+    let erRiktig = false;
+
+    if (oppgave.type === "symbol") {
+
+        erRiktig =
+            svar.toLowerCase() ===
+            riktigSvar.toLowerCase();
+
+    } else {
+
+        erRiktig =
+            svar === riktigSvar;
+
+    }
+
+
+    /*
+       Registrer statistikk.
+    */
+
+    statistikk[oppgave.type].totalt++;
+
+
+    if (erRiktig) {
+
+        poeng++;
+
+        statistikk[oppgave.type].riktig++;
+
+    }
+
+
+    /*
+       Vis tilbakemelding.
+    */
+
+    const feedback =
+        document.getElementById("feedback");
+
+
+    if (erRiktig) {
+
+        feedback.innerHTML =
+            "<strong>Riktig!</strong><br>" +
+            hentForklaring(
+                oppgave.type,
+                oppgave.element
+            );
+
+    } else {
+
+        feedback.innerHTML =
+            "<strong>Ikke helt.</strong><br>" +
+            "Riktig svar er <strong>" +
+            riktigSvar +
+            "</strong>.<br><br>" +
+            hentForklaring(
+                oppgave.type,
+                oppgave.element
+            );
+
+    }
+
+
+    /*
+       Ett forsøk.
+    */
+
+    ferdig = true;
+
+    felt.disabled = true;
+
+    document.getElementById("sjekk").style.display =
+        "none";
+
+
+    /*
+       Siste oppgave?
+    */
+
+    if (oppgaveNr === oppgaver.length - 1) {
+
+        document.getElementById("neste").textContent =
+            "Se resultat →";
+
+    } else {
+
+        document.getElementById("neste").textContent =
+            "Neste oppgave →";
+
+    }
+
+
+    document.getElementById("neste").style.display =
+        "inline-block";
+}
+
+
+/* =========================================================
+   NESTE OPPGAVE
+   ========================================================= */
+
+function nesteOppgave() {
+
+    if (!ferdig) {
+        return;
+    }
+
+    oppgaveNr++;
+
+
+    if (oppgaveNr >= oppgaver.length) {
+
+        visResultat();
+
+        return;
+    }
+
+
+    visOppgave();
+}
+
+
+/* =========================================================
+   RESULTAT
+   ========================================================= */
+
+function visResultat() {
+
+    document.getElementById("oppgaveKort").style.display =
+        "none";
+
+    document.getElementById("resultat").style.display =
+        "block";
+
+    document.getElementById("progress").textContent =
+        "Ferdig";
+
+
+    document.getElementById("poeng").innerHTML =
+        "Du fikk <strong>" +
+        poeng +
+        " av " +
+        oppgaver.length +
+        " riktige</strong>.";
+
+
+    let forbedringer = [];
+
+
+    if (
+        statistikk.symbol.totalt > 0 &&
+        statistikk.symbol.riktig <
+        statistikk.symbol.totalt
+    ) {
+
+        forbedringer.push("symboler");
+
+    }
+
+
+    if (
+        statistikk.atomnummer.totalt > 0 &&
+        statistikk.atomnummer.riktig <
+        statistikk.atomnummer.totalt
+    ) {
+
+        forbedringer.push("atomnummer");
+
+    }
+
+
+    if (
+        statistikk.protoner.totalt > 0 &&
+        statistikk.protoner.riktig <
+        statistikk.protoner.totalt
+    ) {
+
+        forbedringer.push("protoner");
+
+    }
+
+
+    if (
+        statistikk.elektroner.totalt > 0 &&
+        statistikk.elektroner.riktig <
+        statistikk.elektroner.totalt
+    ) {
+
+        forbedringer.push("elektroner");
+
+    }
+
+
+    if (
+        statistikk.ytterelektroner.totalt > 0 &&
+        statistikk.ytterelektroner.riktig <
+        statistikk.ytterelektroner.totalt
+    ) {
+
+        forbedringer.push("elektroner i ytterste skall");
+
+    }
+
+
+    let tekst = "";
+
+
+    if (forbedringer.length === 0) {
+
+        tekst =
+            "Du svarte riktig på alle oppgavetyper. " +
+            "Veldig bra bruk av periodesystemet!";
+
+    } else {
+
+        tekst =
+            "Det kan være lurt å øve litt ekstra på: " +
+            "<strong>" +
+            forbedringer.join(", ") +
+            "</strong>.";
+
+    }
+
+
+    document.getElementById("forbedre").innerHTML =
+        tekst;
+}
+
+
+/* =========================================================
+   START PÅ NYTT
+   ========================================================= */
+
+function startPåNytt() {
+
+    oppgaveNr = 0;
+
+    poeng = 0;
+
+    statistikk = {
+        symbol: { riktig: 0, totalt: 0 },
+        atomnummer: { riktig: 0, totalt: 0 },
+        protoner: { riktig: 0, totalt: 0 },
+        elektroner: { riktig: 0, totalt: 0 },
+        ytterelektroner: { riktig: 0, totalt: 0 }
+    };
+
+
+    oppgaver = lagOppgaver();
+
+
+    document.getElementById("resultat").style.display =
+        "none";
+
+    document.getElementById("oppgaveKort").style.display =
+        "block";
+
+
+    visOppgave();
+}
+
+
+/* =========================================================
+   START
+   ========================================================= */
+
+oppgaver = lagOppgaver();
+
+visOppgave();
+
+
+/*
+   Enter-tasten kan brukes for å sjekke svaret.
+*/
+
+document.getElementById("svar").addEventListener(
+    "keydown",
+    function(event) {
+
+        if (event.key === "Enter") {
+
+            if (!ferdig) {
+                sjekkSvar();
+            }
+
+        }
+
+    }
+);
+
+</script>
+
+</body>
+</html>
