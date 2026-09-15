@@ -122,6 +122,71 @@ input:focus {
     border-color: #667f91;
 }
 
+/* ---------------- KJEMI-EDITOR FOR IONER ---------------- */
+
+.ion-editor {
+    display: none;
+    padding: 16px;
+    border: 1px solid #cfd5da;
+    border-radius: 12px;
+    background: #f8fafb;
+}
+
+.ion-editor-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.ion-symbol-input {
+    width: 110px;
+    text-align: center;
+}
+
+.ion-preview {
+    min-width: 90px;
+    padding: 12px 16px;
+    background: white;
+    border: 1px solid #d9dee2;
+    border-radius: 10px;
+    font-size: 28px;
+    text-align: center;
+    font-style: normal;
+}
+
+.ion-preview sup {
+    font-size: 0.62em;
+    line-height: 0;
+}
+
+.charge-buttons {
+    display: flex;
+    gap: 7px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+}
+
+.charge-button {
+    margin-top: 0;
+    padding: 9px 12px;
+    min-width: 44px;
+    background: #e9eef1;
+    color: #26343d;
+    border: 1px solid #cfd7dc;
+}
+
+.charge-button:hover, .charge-button.selected {
+    background: #405968;
+    color: white;
+}
+
+.ion-editor-help {
+    margin-top: 10px;
+    font-size: 13px;
+    color: #6b737c;
+}
+
 /* ---------------- KNAPPER ---------------- */
 
 button {
@@ -193,6 +258,48 @@ button:disabled {
     line-height: 1.6;
 }
 
+/* ---------------- STARTMENY ---------------- */
+
+.menu-title {
+    font-size: 28px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+.menu-intro {
+    color: #66727d;
+    line-height: 1.5;
+    margin-bottom: 26px;
+}
+.menu-option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 16px 0;
+    font-size: 17px;
+}
+.menu-option input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    margin: 0;
+}
+.menu-field {
+    margin-top: 22px;
+}
+.menu-field label {
+    display: block;
+    font-size: 15px;
+    color: #66727d;
+    margin-bottom: 8px;
+}
+.menu-field select {
+    width: 100%;
+    padding: 13px 14px;
+    font-size: 17px;
+    border: 1px solid #cfd5da;
+    border-radius: 10px;
+    background: white;
+}
+
 /* ---------------- FOOTER ---------------- */
 
 .footer {
@@ -233,15 +340,48 @@ button:disabled {
         </div>
 
         <div class="progress" id="progress">
-            Oppgave 1 av 15
+            Velg økt
         </div>
 
     </div>
 
 
+    <!-- STARTMENY -->
+
+    <div class="card" id="startmeny">
+        <div class="menu-title">Velg økt</div>
+        <div class="menu-intro">Velg hva du vil øve på og hvor mange oppgaver du ønsker.</div>
+
+        <label class="menu-option">
+            <input type="checkbox" id="kun20" checked>
+            <span>Kun de 20 første grunnstoffene</span>
+        </label>
+
+        <label class="menu-option">
+            <input type="checkbox" id="inkluderIoner">
+            <span>Inkluder ioner</span>
+        </label>
+
+        <div class="menu-field">
+            <label for="antallOppgaver">Antall oppgaver</label>
+            <select id="antallOppgaver">
+                <option value="5">5 oppgaver</option>
+                <option value="10">10 oppgaver</option>
+                <option value="15" selected>15 oppgaver</option>
+                <option value="20">20 oppgaver</option>
+                <option value="25">25 oppgaver</option>
+                <option value="30">30 oppgaver</option>
+                <option value="40">40 oppgaver</option>
+                <option value="50">50 oppgaver</option>
+            </select>
+        </div>
+
+        <button onclick="startØkt()">Start økt →</button>
+    </div>
+
     <!-- OPPGAVEKORT -->
 
-    <div class="card" id="oppgaveKort">
+    <div class="card" id="oppgaveKort" style="display:none">
 
         <div class="topic">
             PERIODESYSTEMET
@@ -261,6 +401,23 @@ button:disabled {
             placeholder="Skriv svaret her"
             autocomplete="off"
         >
+
+        <div id="ionEditor" class="ion-editor">
+            <div class="ion-editor-row">
+                <input id="ionSymbol" class="ion-symbol-input" type="text" maxlength="2"
+                       placeholder="Symbol" autocomplete="off" aria-label="Grunnstoffsymbol">
+                <div id="ionPreview" class="ion-preview" aria-live="polite">—</div>
+            </div>
+            <div class="charge-buttons" id="chargeButtons" aria-label="Velg ioneladning">
+                <button type="button" class="charge-button" data-charge="1" onclick="velgLadning(1)">⁺</button>
+                <button type="button" class="charge-button" data-charge="2" onclick="velgLadning(2)">²⁺</button>
+                <button type="button" class="charge-button" data-charge="3" onclick="velgLadning(3)">³⁺</button>
+                <button type="button" class="charge-button" data-charge="-1" onclick="velgLadning(-1)">⁻</button>
+                <button type="button" class="charge-button" data-charge="-2" onclick="velgLadning(-2)">²⁻</button>
+                <button type="button" class="charge-button" data-charge="-3" onclick="velgLadning(-3)">³⁻</button>
+            </div>
+            <div class="ion-editor-help">Skriv grunnstoffsymbolet og velg ladning. Svaret vises med korrekt kjemisk notasjon.</div>
+        </div>
 
         <button id="sjekk" onclick="sjekkSvar()">
             Sjekk svar
@@ -315,55 +472,55 @@ button:disabled {
 
 const grunnstoffer = [
 
-    { navn: "Hydrogen", symbol: "H", atomnummer: 1, ytterelektroner: 1 },
+    { navn: "Hydrogen", symbol: "H", atomnummer: 1, ytterelektroner: 1, ioner: [{ladning: 1}, {ladning: -1}] },
 
     { navn: "Helium", symbol: "He", atomnummer: 2, ytterelektroner: 2 },
 
-    { navn: "Litium", symbol: "Li", atomnummer: 3, ytterelektroner: 1 },
+    { navn: "Litium", symbol: "Li", atomnummer: 3, ytterelektroner: 1, ioner: [{ladning: 1}] },
 
-    { navn: "Beryllium", symbol: "Be", atomnummer: 4, ytterelektroner: 2 },
+    { navn: "Beryllium", symbol: "Be", atomnummer: 4, ytterelektroner: 2, ioner: [{ladning: 2}] },
 
-    { navn: "Bor", symbol: "B", atomnummer: 5, ytterelektroner: 3 },
+    { navn: "Bor", symbol: "B", atomnummer: 5, ytterelektroner: 3, ioner: [{ladning: 3}] },
 
     { navn: "Karbon", symbol: "C", atomnummer: 6, ytterelektroner: 4 },
 
-    { navn: "Nitrogen", symbol: "N", atomnummer: 7, ytterelektroner: 5 },
+    { navn: "Nitrogen", symbol: "N", atomnummer: 7, ytterelektroner: 5, ioner: [{ladning: -3}] },
 
-    { navn: "Oksygen", symbol: "O", atomnummer: 8, ytterelektroner: 6 },
+    { navn: "Oksygen", symbol: "O", atomnummer: 8, ytterelektroner: 6, ioner: [{ladning: -2}] },
 
-    { navn: "Fluor", symbol: "F", atomnummer: 9, ytterelektroner: 7 },
+    { navn: "Fluor", symbol: "F", atomnummer: 9, ytterelektroner: 7, ioner: [{ladning: -1}] },
 
     { navn: "Neon", symbol: "Ne", atomnummer: 10, ytterelektroner: 8 },
 
-    { navn: "Natrium", symbol: "Na", atomnummer: 11, ytterelektroner: 1 },
+    { navn: "Natrium", symbol: "Na", atomnummer: 11, ytterelektroner: 1, ioner: [{ladning: 1}] },
 
-    { navn: "Magnesium", symbol: "Mg", atomnummer: 12, ytterelektroner: 2 },
+    { navn: "Magnesium", symbol: "Mg", atomnummer: 12, ytterelektroner: 2, ioner: [{ladning: 2}] },
 
-    { navn: "Aluminium", symbol: "Al", atomnummer: 13, ytterelektroner: 3 },
+    { navn: "Aluminium", symbol: "Al", atomnummer: 13, ytterelektroner: 3, ioner: [{ladning: 3}] },
 
     { navn: "Silisium", symbol: "Si", atomnummer: 14, ytterelektroner: 4 },
 
-    { navn: "Fosfor", symbol: "P", atomnummer: 15, ytterelektroner: 5 },
+    { navn: "Fosfor", symbol: "P", atomnummer: 15, ytterelektroner: 5, ioner: [{ladning: -3}] },
 
-    { navn: "Svovel", symbol: "S", atomnummer: 16, ytterelektroner: 6 },
+    { navn: "Svovel", symbol: "S", atomnummer: 16, ytterelektroner: 6, ioner: [{ladning: -2}] },
 
-    { navn: "Klor", symbol: "Cl", atomnummer: 17, ytterelektroner: 7 },
+    { navn: "Klor", symbol: "Cl", atomnummer: 17, ytterelektroner: 7, ioner: [{ladning: -1}] },
 
     { navn: "Argon", symbol: "Ar", atomnummer: 18, ytterelektroner: 8 },
 
-    { navn: "Kalium", symbol: "K", atomnummer: 19, ytterelektroner: 1 },
+    { navn: "Kalium", symbol: "K", atomnummer: 19, ytterelektroner: 1, ioner: [{ladning: 1}] },
 
-    { navn: "Kalsium", symbol: "Ca", atomnummer: 20, ytterelektroner: 2 },
+    { navn: "Kalsium", symbol: "Ca", atomnummer: 20, ytterelektroner: 2, ioner: [{ladning: 2}] },
 
-    { navn: "Gallium", symbol: "Ga", atomnummer: 31, ytterelektroner: 3 },
+    { navn: "Gallium", symbol: "Ga", atomnummer: 31, ytterelektroner: 3, ioner: [{ladning: 3}] },
 
     { navn: "Germanium", symbol: "Ge", atomnummer: 32, ytterelektroner: 4 },
 
-    { navn: "Arsen", symbol: "As", atomnummer: 33, ytterelektroner: 5 },
+    { navn: "Arsen", symbol: "As", atomnummer: 33, ytterelektroner: 5, ioner: [{ladning: -3}] },
 
-    { navn: "Selen", symbol: "Se", atomnummer: 34, ytterelektroner: 6 },
+    { navn: "Selen", symbol: "Se", atomnummer: 34, ytterelektroner: 6, ioner: [{ladning: -2}] },
 
-    { navn: "Brom", symbol: "Br", atomnummer: 35, ytterelektroner: 7 },
+    { navn: "Brom", symbol: "Br", atomnummer: 35, ytterelektroner: 7, ioner: [{ladning: -1}] },
 
     { navn: "Krypton", symbol: "Kr", atomnummer: 36, ytterelektroner: 8 }
 
@@ -397,12 +554,18 @@ let poeng = 0;
 
 let ferdig = false;
 
+let antallValgt = 15;
+let brukKun20 = true;
+let brukIoner = false;
+
 let statistikk = {
     symbol: { riktig: 0, totalt: 0 },
     atomnummer: { riktig: 0, totalt: 0 },
     protoner: { riktig: 0, totalt: 0 },
     elektroner: { riktig: 0, totalt: 0 },
-    ytterelektroner: { riktig: 0, totalt: 0 }
+    ytterelektroner: { riktig: 0, totalt: 0 },
+    ion: { riktig: 0, totalt: 0 },
+    ionelektroner: { riktig: 0, totalt: 0 }
 };
 
 
@@ -423,83 +586,62 @@ function bland(array) {
 
 function lagOppgaver() {
 
-    const elementer = bland(grunnstoffer);
+    const tilgjengelige = brukKun20
+        ? grunnstoffer.filter(e => e.atomnummer <= 20)
+        : grunnstoffer;
+
+    const typer = [...oppgavetyper];
+    if (brukIoner) {
+        typer.push("ion", "ionelektroner");
+    }
 
     const nyeOppgaver = [];
 
+    for (let i = 0; i < antallValgt; i++) {
+        let type = typer[Math.floor(Math.random() * typer.length)];
+        let kandidater = tilgjengelige;
 
-    /*
-       De fire første oppgavene har fast progresjon.
-    */
+        if (type === "ion" || type === "ionelektroner") {
+            kandidater = tilgjengelige.filter(e => e.ioner && e.ioner.length > 0);
+            if (kandidater.length === 0) type = "symbol";
+        }
 
-    nyeOppgaver.push({
-        element: elementer[0],
-        type: "symbol"
-    });
+        const element = kandidater[Math.floor(Math.random() * kandidater.length)];
+        const oppgave = { element, type };
 
-    nyeOppgaver.push({
-        element: elementer[1],
-        type: "atomnummer"
-    });
+        if (type === "ion" || type === "ionelektroner") {
+            oppgave.ion = element.ioner[Math.floor(Math.random() * element.ioner.length)];
+        }
 
-    nyeOppgaver.push({
-        element: elementer[2],
-        type: "protoner"
-    });
-
-    nyeOppgaver.push({
-        element: elementer[3],
-        type: "elektroner"
-    });
-
-
-    /*
-       Oppgave 5–15 blandes.
-       
-       Vi lager først en balansert liste med
-       oppgavetyper og blander den.
-    */
-
-    let blandedeTyper = [
-
-        "symbol",
-        "atomnummer",
-        "protoner",
-        "elektroner",
-        "ytterelektroner",
-
-        "symbol",
-        "atomnummer",
-        "protoner",
-        "elektroner",
-        "ytterelektroner",
-
-        "symbol"
-
-    ];
-
-    blandedeTyper = bland(blandedeTyper);
-
-
-    for (let i = 0; i < 11; i++) {
-
-        nyeOppgaver.push({
-            element: elementer[i + 4],
-            type: blandedeTyper[i]
-        });
-
+        nyeOppgaver.push(oppgave);
     }
-
 
     return nyeOppgaver;
 }
 
 
+
+function ionSvar(element, ion) {
+    if (!ion) return element.symbol;
+    const l = ion.ladning;
+    const tegn = l > 0 ? "+" : "−";
+    const tall = Math.abs(l) === 1 ? "" : Math.abs(l);
+    return element.symbol + tall + tegn;
+}
+
+function ionTekst(element, ion) {
+    if (!ion) return element.symbol;
+    const l = ion.ladning;
+    const tegn = l > 0 ? "+" : "−";
+    const tall = Math.abs(l) === 1 ? "" : Math.abs(l);
+    return element.symbol + "<sup>" + tall + tegn + "</sup>";
+}
+
 /* =========================================================
    TEKST TIL OPPGAVEN
    ========================================================= */
 
-function hentSpørsmål(type, element) {
+function hentSpørsmål(type, element, ion) {
 
     if (type === "symbol") {
 
@@ -541,6 +683,14 @@ function hentSpørsmål(type, element) {
 
     }
 
+    if (type === "ion") {
+        return "Skriv formelen for det vanlige ionet av " + element.navn.toLowerCase() + ".";
+    }
+
+    if (type === "ionelektroner") {
+        return "Hvor mange elektroner har ionet " + ionTekst(element, ion) + "?";
+    }
+
 }
 
 
@@ -548,7 +698,7 @@ function hentSpørsmål(type, element) {
    RIKTIG SVAR
    ========================================================= */
 
-function hentRiktigSvar(type, element) {
+function hentRiktigSvar(type, element, ion) {
 
     if (type === "symbol") {
         return element.symbol;
@@ -570,6 +720,14 @@ function hentRiktigSvar(type, element) {
         return String(element.ytterelektroner);
     }
 
+    if (type === "ion") {
+        return ionSvar(element, ion);
+    }
+
+    if (type === "ionelektroner") {
+        return String(element.atomnummer - ion.ladning);
+    }
+
 }
 
 
@@ -577,7 +735,7 @@ function hentRiktigSvar(type, element) {
    FORKLARING
    ========================================================= */
 
-function hentForklaring(type, element) {
+function hentForklaring(type, element, ion) {
 
     if (type === "symbol") {
 
@@ -633,8 +791,64 @@ function hentForklaring(type, element) {
 
     }
 
+    if (type === "ion") {
+        const l = ion.ladning;
+        const handling = l > 0 ? "avgitt " + l : "tatt opp " + Math.abs(l);
+        return element.navn + " kan her danne <strong>" + ionTekst(element, ion) +
+               "</strong>. Det betyr at atomet har " + handling + " elektron" +
+               (Math.abs(l) === 1 ? "" : "er") + ".";
+    }
+
+    if (type === "ionelektroner") {
+        const antall = element.atomnummer - ion.ladning;
+        const handling = ion.ladning > 0 ? "mistet " + ion.ladning : "fått " + Math.abs(ion.ladning);
+        return "Et nøytralt " + element.navn.toLowerCase() + "atom har " + element.atomnummer +
+               " elektroner. I " + ionTekst(element, ion) + " har det " + handling +
+               " elektron" + (Math.abs(ion.ladning) === 1 ? "" : "er") +
+               " og har derfor <strong>" + antall + "</strong> elektroner.";
+    }
+
 }
 
+
+let valgtIonLadning = null;
+
+function ladningSomHTML(ladning) {
+    const tegn = ladning > 0 ? "+" : "−";
+    const tall = Math.abs(ladning) === 1 ? "" : Math.abs(ladning);
+    return "<sup>" + tall + tegn + "</sup>";
+}
+
+function oppdaterIonPreview() {
+    const symbol = document.getElementById("ionSymbol").value.trim();
+    const preview = document.getElementById("ionPreview");
+    if (!symbol && valgtIonLadning === null) {
+        preview.innerHTML = "—";
+        return;
+    }
+    const rentSymbol = symbol.replace(/[^A-Za-z]/g, "").slice(0, 2);
+    preview.innerHTML = rentSymbol + (valgtIonLadning === null ? "" : ladningSomHTML(valgtIonLadning));
+}
+
+function velgLadning(ladning) {
+    if (ferdig) return;
+    valgtIonLadning = ladning;
+    document.querySelectorAll(".charge-button").forEach(knapp => {
+        knapp.classList.toggle("selected", Number(knapp.dataset.charge) === ladning);
+    });
+    oppdaterIonPreview();
+}
+
+function hentIonEditorSvar() {
+    const symbol = document.getElementById("ionSymbol").value.trim();
+    if (!symbol || valgtIonLadning === null) return null;
+    return { symbol, ladning: valgtIonLadning };
+}
+
+document.getElementById("ionSymbol").addEventListener("input", function() {
+    this.value = this.value.replace(/[^A-Za-z]/g, "").slice(0, 2);
+    oppdaterIonPreview();
+});
 
 /* =========================================================
    VIS OPPGAVE
@@ -655,16 +869,38 @@ function visOppgave() {
     document.getElementById("element").textContent =
         oppgave.element.navn;
 
-    document.getElementById("question").textContent =
+    document.getElementById("question").innerHTML =
         hentSpørsmål(
             oppgave.type,
-            oppgave.element
+            oppgave.element,
+            oppgave.ion
         );
 
     const felt = document.getElementById("svar");
 
     felt.value = "";
     felt.disabled = false;
+
+    const ionEditor = document.getElementById("ionEditor");
+    const ionSymbol = document.getElementById("ionSymbol");
+    valgtIonLadning = null;
+    ionSymbol.value = "";
+    ionSymbol.disabled = false;
+    document.querySelectorAll(".charge-button").forEach(knapp => {
+        knapp.classList.remove("selected");
+        knapp.disabled = false;
+    });
+    oppdaterIonPreview();
+
+    if (oppgave.type === "ion") {
+        felt.style.display = "none";
+        ionEditor.style.display = "block";
+        setTimeout(() => ionSymbol.focus(), 0);
+    } else {
+        felt.style.display = "block";
+        ionEditor.style.display = "none";
+        felt.focus();
+    }
 
     document.getElementById("sjekk").style.display =
         "inline-block";
@@ -674,8 +910,6 @@ function visOppgave() {
 
     document.getElementById("feedback").innerHTML =
         "";
-
-    felt.focus();
 }
 
 
@@ -698,7 +932,8 @@ function sjekkSvar() {
     const riktigSvar =
         hentRiktigSvar(
             oppgave.type,
-            oppgave.element
+            oppgave.element,
+            oppgave.ion
         );
 
 
@@ -710,9 +945,14 @@ function sjekkSvar() {
 
     if (oppgave.type === "symbol") {
 
-        erRiktig =
-            svar.toLowerCase() ===
-            riktigSvar.toLowerCase();
+        erRiktig = svar.toLowerCase() === riktigSvar.toLowerCase();
+
+    } else if (oppgave.type === "ion") {
+
+        const ionSvarFraEditor = hentIonEditorSvar();
+        erRiktig = ionSvarFraEditor !== null &&
+            ionSvarFraEditor.symbol.toLowerCase() === oppgave.element.symbol.toLowerCase() &&
+            ionSvarFraEditor.ladning === oppgave.ion.ladning;
 
     } else {
 
@@ -752,7 +992,8 @@ function sjekkSvar() {
             "<strong>Riktig!</strong><br>" +
             hentForklaring(
                 oppgave.type,
-                oppgave.element
+                oppgave.element,
+                oppgave.ion
             );
 
     } else {
@@ -760,11 +1001,12 @@ function sjekkSvar() {
         feedback.innerHTML =
             "<strong>Ikke helt.</strong><br>" +
             "Riktig svar er <strong>" +
-            riktigSvar +
+            (oppgave.type === "ion" ? ionTekst(oppgave.element, oppgave.ion) : riktigSvar) +
             "</strong>.<br><br>" +
             hentForklaring(
                 oppgave.type,
-                oppgave.element
+                oppgave.element,
+                oppgave.ion
             );
 
     }
@@ -777,6 +1019,8 @@ function sjekkSvar() {
     ferdig = true;
 
     felt.disabled = true;
+    document.getElementById("ionSymbol").disabled = true;
+    document.querySelectorAll(".charge-button").forEach(knapp => knapp.disabled = true);
 
     document.getElementById("sjekk").style.display =
         "none";
@@ -940,42 +1184,44 @@ function visResultat() {
    START PÅ NYTT
    ========================================================= */
 
-function startPåNytt() {
+function startØkt() {
+    brukKun20 = document.getElementById("kun20").checked;
+    brukIoner = document.getElementById("inkluderIoner").checked;
+    antallValgt = Number(document.getElementById("antallOppgaver").value);
 
     oppgaveNr = 0;
-
     poeng = 0;
-
     statistikk = {
         symbol: { riktig: 0, totalt: 0 },
         atomnummer: { riktig: 0, totalt: 0 },
         protoner: { riktig: 0, totalt: 0 },
         elektroner: { riktig: 0, totalt: 0 },
-        ytterelektroner: { riktig: 0, totalt: 0 }
+        ytterelektroner: { riktig: 0, totalt: 0 },
+        ion: { riktig: 0, totalt: 0 },
+        ionelektroner: { riktig: 0, totalt: 0 }
     };
 
-
     oppgaver = lagOppgaver();
-
-
-    document.getElementById("resultat").style.display =
-        "none";
-
-    document.getElementById("oppgaveKort").style.display =
-        "block";
-
-
+    document.getElementById("startmeny").style.display = "none";
+    document.getElementById("resultat").style.display = "none";
+    document.getElementById("oppgaveKort").style.display = "block";
     visOppgave();
 }
+
+function startPåNytt() {
+    document.getElementById("resultat").style.display = "none";
+    document.getElementById("oppgaveKort").style.display = "none";
+    document.getElementById("startmeny").style.display = "block";
+    document.getElementById("progress").textContent = "Velg økt";
+}
+
 
 
 /* =========================================================
    START
    ========================================================= */
 
-oppgaver = lagOppgaver();
-
-visOppgave();
+// Økten starter fra menyen.
 
 
 /*
@@ -996,6 +1242,10 @@ document.getElementById("svar").addEventListener(
 
     }
 );
+
+document.getElementById("ionSymbol").addEventListener("keydown", function(event) {
+    if (event.key === "Enter" && !ferdig) sjekkSvar();
+});
 
 </script>
 
