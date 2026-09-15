@@ -362,6 +362,11 @@ button:disabled {
             <span>Inkluder ioner</span>
         </label>
 
+        <label class="menu-option">
+            <input type="checkbox" id="kunIoner">
+            <span>Kun ioner</span>
+        </label>
+
         <div class="menu-field">
             <label for="antallOppgaver">Antall oppgaver</label>
             <select id="antallOppgaver">
@@ -557,6 +562,7 @@ let ferdig = false;
 let antallValgt = 15;
 let brukKun20 = true;
 let brukIoner = false;
+let brukKunIoner = false;
 
 let statistikk = {
     symbol: { riktig: 0, totalt: 0 },
@@ -590,9 +596,15 @@ function lagOppgaver() {
         ? grunnstoffer.filter(e => e.atomnummer <= 20)
         : grunnstoffer;
 
-    const typer = [...oppgavetyper];
-    if (brukIoner) {
-        typer.push("ion", "ionelektroner");
+    let typer;
+
+    if (brukKunIoner) {
+        typer = ["ion", "ionelektroner"];
+    } else {
+        typer = [...oppgavetyper];
+        if (brukIoner) {
+            typer.push("ion", "ionelektroner");
+        }
     }
 
     const nyeOppgaver = [];
@@ -1186,7 +1198,8 @@ function visResultat() {
 
 function startØkt() {
     brukKun20 = document.getElementById("kun20").checked;
-    brukIoner = document.getElementById("inkluderIoner").checked;
+    brukKunIoner = document.getElementById("kunIoner").checked;
+    brukIoner = document.getElementById("inkluderIoner").checked || brukKunIoner;
     antallValgt = Number(document.getElementById("antallOppgaver").value);
 
     oppgaveNr = 0;
@@ -1220,6 +1233,19 @@ function startPåNytt() {
 /* =========================================================
    START
    ========================================================= */
+
+// "Kun ioner" innebærer automatisk at ioner er med.
+const kunIonerValg = document.getElementById("kunIoner");
+const inkluderIonerValg = document.getElementById("inkluderIoner");
+
+kunIonerValg.addEventListener("change", function() {
+    if (this.checked) {
+        inkluderIonerValg.checked = true;
+        inkluderIonerValg.disabled = true;
+    } else {
+        inkluderIonerValg.disabled = false;
+    }
+});
 
 // Økten starter fra menyen.
 
