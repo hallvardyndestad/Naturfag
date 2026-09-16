@@ -1,1 +1,45 @@
+from pathlib import Path
 
+# Start from the last known working complete version, not the broken slide-2 experiments.
+src=Path("/mnt/data/MILJOGIFT_FISK_KOMPLETT_JUSTERT_REPARERT.html")
+s=src.read_text(encoding="utf-8")
+
+# Keep the original 3-column proportions so the large fish stays inside its panel.
+# Enlarge fish by increasing the illustration area's usable width and reducing padding/gaps,
+# not by forcing oversized minimum grid columns.
+s=s.replace(
+    ".visual{background:#fff;border:1px solid var(--line);border-radius:22px;padding:22px;",
+    ".visual{background:#fff;border:1px solid var(--line);border-radius:22px;padding:12px;"
+)
+s=s.replace(
+    ".chainviz{display:grid;grid-template-columns:1.3fr 80px 1fr;align-items:center;gap:16px}",
+    ".chainviz{display:grid;grid-template-columns:1.35fr 54px 1fr;align-items:center;gap:8px;overflow:hidden}"
+)
+s=s.replace(
+    ".ten{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}",
+    ".ten{display:grid;grid-template-columns:repeat(5,1fr);gap:3px;align-items:center}"
+)
+s=s.replace(".mini{position:relative;height:78px}", ".mini{position:relative;height:88px}")
+s=s.replace(
+    ".mini i{position:absolute;width:7px;height:7px;border-radius:50%;background:var(--red);left:48%;top:45%",
+    ".mini i{position:absolute;width:6px;height:6px;border-radius:50%;background:var(--red);left:48%;top:50%;transform:translate(-50%,-50%)"
+)
+s=s.replace(".bigfish{position:relative;height:220px}", ".bigfish{position:relative;height:235px;min-width:0}")
+s=s.replace(
+    ".bigfish i{position:absolute;width:5px;height:5px;background:var(--red);border-radius:50%",
+    ".bigfish i{position:absolute;width:4px;height:4px;background:var(--red);border-radius:50%;transform:translate(-50%,-50%)"
+)
+
+# Slide-2-only dot positions, clustered on the central body, not head/tail.
+old='const summaryDots=[[18,43],[22,52],[27,40],[31,49],[35,57],[39,42],[43,51],[47,59],[51,45],[55,54]];'
+new='const summaryDots=[[34,44],[38,51],[42,58],[46,43],[50,50],[54,57],[58,44],[62,51],[66,57],[70,48]];'
+s=s.replace(old,new)
+
+out=Path("/mnt/data/MILJOGIFT_FISK_SLIDE2_STABIL.html")
+out.write_text(s,encoding="utf-8")
+
+# Verify game mechanics before summaryDots are identical.
+orig=src.read_text(encoding="utf-8")
+assert orig.split("const summaryDots=",1)[0].split("<script>",1)[1] == s.split("const summaryDots=",1)[0].split("<script>",1)[1]
+print(out.name)
+print("Game mechanics unchanged.")
