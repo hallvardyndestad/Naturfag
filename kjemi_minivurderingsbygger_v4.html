@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="no"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KjemiLab – minivurderingsbygger</title>
+<style>
+:root{--ink:#24323a;--muted:#66757d;--line:#dce4e7;--paper:#fff;--bg:#f3f6f7;--accent:#405f6e;--soft:#eef3f5;--good:#18794e;--bad:#a33}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#edf3f5 0,#f7f9fa 320px,var(--bg) 100%);color:var(--ink);font:16px/1.45 system-ui,-apple-system,Segoe UI,sans-serif}
+.wrap{max-width:1080px;margin:auto;padding:28px 16px 60px}.brandbar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:18px}.brand{display:flex;align-items:center;gap:12px}.brandmark{width:42px;height:42px;border-radius:13px;background:#405f6e;color:#fff;display:grid;place-items:center;font-weight:900;letter-spacing:-.04em}.brandname{font-weight:850}.brandsub{font-size:12px;color:var(--muted)}.card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:24px;margin:14px 0;box-shadow:0 5px 22px #18303b0a}
+h1{font-size:30px;margin:4px 0 8px}h2{font-size:21px;margin:0 0 14px}h3{font-size:17px;margin:0 0 8px}.eyebrow{font-size:12px;font-weight:800;letter-spacing:.12em;color:#6b7a82}
+.lead,.muted{color:var(--muted)}button,.btn,select,input{font:inherit}.btn{border:0;border-radius:10px;padding:11px 15px;background:var(--accent);color:#fff;font-weight:750;cursor:pointer}.btn.secondary{background:#fff;color:var(--ink);border:1px solid #cbd6da}.btn.ghost{background:var(--soft);color:var(--ink)}
+.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:12px}.span4{grid-column:span 4}.span6{grid-column:span 6}.span8{grid-column:span 8}.span12{grid-column:span 12}
+label{display:block;font-size:13px;font-weight:750;color:#52616a;margin-bottom:5px}input[type=text],input[type=number],select{width:100%;border:1px solid #cbd6da;border-radius:9px;padding:10px;background:#fff}
+.row{display:flex;gap:9px;align-items:center;flex-wrap:wrap}.taskrow{display:grid;grid-template-columns:44px 1.4fr 1fr 1.4fr 44px;gap:9px;align-items:end;padding:12px 0;border-bottom:1px solid #edf1f2}.num{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:var(--soft);font-weight:800}
+.hidden{display:none!important}.variants{display:block}.tabs{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0 16px}.tab{border:1px solid #cbd6da;background:#fff;color:var(--ink);border-radius:10px;padding:9px 14px;font-weight:800;cursor:pointer}.tab.active{background:var(--accent);color:#fff;border-color:var(--accent)}.variant{border:1px solid var(--line);border-radius:14px;padding:18px;background:#fbfcfc}.varianthead{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:12px}.variant b{font-size:20px}.previewtask{background:#fff;border:1px solid #e0e7e9;border-radius:12px;padding:14px;margin:10px 0}.previewtask h3{margin:0 0 6px}.previewtask p{margin:4px 0;color:#58666e}.tag{display:inline-block;font-size:11px;background:#eaf0f2;border-radius:999px;padding:3px 8px;margin-left:4px;color:#52616a}
+.notice{background:#f7fafb;border-left:4px solid #7b97a5;padding:12px 14px;border-radius:8px}.buildersteps{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 4px}.step{background:#fff;border:1px solid var(--line);border-radius:999px;padding:7px 11px;font-size:13px;color:#5d6c74}.step strong{color:var(--ink)}.share{display:flex;gap:8px}.share input{font-size:13px}
+.topbar{display:flex;justify-content:space-between;gap:12px;align-items:center}.pill{padding:7px 10px;background:var(--soft);border-radius:999px;font-size:13px;font-weight:750}
+.q{border-top:4px solid #8aa2ad}.qhead{display:flex;justify-content:space-between;gap:10px}.choice{border:1px solid #cbd6da;background:#fff;border-radius:9px;padding:9px 12px;cursor:pointer}.choice.sel{border:2px solid var(--accent);padding:8px 11px;background:var(--soft)}
+.atomarea{display:flex;gap:8px;flex-wrap:wrap;min-height:70px;padding:12px;border:1px dashed #b9c7cc;border-radius:12px;margin:12px 0}.atom{width:48px;height:48px;border-radius:50%;border:2px solid #8ca0a9;background:#fff;display:grid;place-items:center;font-weight:850;cursor:pointer}.atom.sel{outline:4px solid #b9d0db}
+.bonds{font-size:14px;color:#52616a;min-height:26px}.score{font-size:40px;font-weight:850}.resultgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.stat{border:1px solid var(--line);border-radius:12px;padding:14px}.stat strong{display:block;font-size:24px}
+@media(max-width:760px){.span4,.span6,.span8{grid-column:span 12}.taskrow{grid-template-columns:36px 1fr}.taskrow>*{grid-column:2}.taskrow>.num{grid-column:1;grid-row:1}.taskrow>.remove{grid-column:1;grid-row:2}.resultgrid{grid-template-columns:1fr}.share{display:block}.share button{margin-top:8px}}
+@media print{body{background:#fff}.wrap{max-width:none}.no-print{display:none!important}.card{box-shadow:none}}
+</style></head><body><main class="wrap">
+<section id="teacher">
+<div class="brandbar"><div class="brand"><div class="brandmark">K</div><div><div class="brandname">KjemiLab</div><div class="brandsub">Minivurderingsbygger</div></div></div><span class="pill">Lærerverktøy</span></div>
+<div class="card"><div class="eyebrow">KJEMI · UNDERVEISVURDERING</div><h1>Lag en minivurdering</h1><p class="lead">Velg hva du vil vurdere. Verktøyet lager fem faglig sammenlignbare varianter og én elevlenke som kan deles i Teams.</p><div class="buildersteps"><span class="step"><strong>1</strong> Velg oppgaver</span><span class="step"><strong>2</strong> Se variantene</span><span class="step"><strong>3</strong> Kopier elevlenken</span></div>
+<div class="grid"><div class="span8"><label>Tittel</label><input id="title" type="text" value="Minivurdering – kjemiske bindinger"></div><div class="span4"><label>Antall varianter</label><select disabled><option>5</option></select></div></div></div>
+<div class="card"><h2>Oppgaver</h2><div id="rows"></div><div class="row" style="margin-top:14px"><button class="btn secondary" onclick="addRow()">+ Legg til oppgave</button><button class="btn" onclick="generate()">Generer fem varianter</button></div></div>
+<div class="card"><h2>Etter innlevering</h2><div class="grid"><div class="span6"><label>Tilbakemelding</label><select id="feedback"><option value="full">Poeng + faglig tilbakemelding</option><option value="score">Bare poengsum</option></select></div><div class="span6"><label>Visningsbytte</label><select id="visibility"><option value="on">Registrer når vurderingen forlates</option><option value="off">Ikke registrer</option></select></div></div></div>
+<div id="generated" class="card hidden"><div class="eyebrow">KLAR TIL KONTROLL</div><h2>Forhåndsvisning av variantene</h2><p class="muted">Se gjennom A–E før du deler. Hver oppgave viser hva eleven faktisk får se og hva eleven skal gjøre.</p><div class="row"><button class="btn secondary" onclick="regenerate()">Lag fem nye varianter</button><span class="muted" style="font-size:13px">Dette lager også en ny elevlenke.</span></div><div id="variantTabs" class="tabs"></div><div id="variants" class="variants"></div>
+<hr style="border:0;border-top:1px solid var(--line);margin:22px 0"><div class="eyebrow">FERDIG</div><h2 style="margin-top:4px">Del med elevene</h2><label>Elevlenke – kopier denne til Teams</label><div class="share"><input id="shareurl" readonly><button class="btn" onclick="copyLink()">Kopier lenke</button></div><p class="muted" style="font-size:13px">HTML-filen må ligge på en nettadresse som elevene kan åpne. Den samme lenken fordeler elevene tilfeldig på variant A–E og husker varianten i nettleseren.</p></div>
+</section>
+
+<section id="student" class="hidden">
+<div class="brandbar"><div class="brand"><div class="brandmark">K</div><div><div class="brandname">KjemiLab</div><div class="brandsub">Minivurdering</div></div></div><span class="pill" id="assessmentCodeTop"></span></div>
+<div id="studentStart" class="card"><div class="eyebrow">KJEMI · MINIVURDERING</div><h1 id="stitle"></h1><p id="intro" class="lead"></p><div class="notice">Du får ingen tilbakemelding underveis. Svarene vurderes først når du leverer. <span id="visnote">Det registreres hvor mange ganger vurderingen ikke er synlig.</span></div><div class="row" style="margin-top:18px"><button class="btn" onclick="startAssessment()">Start vurdering</button></div></div>
+<div id="quiz" class="hidden"><div class="topbar card"><div><div class="eyebrow">MINIVURDERING</div><strong id="qtitle"></strong></div><div class="pill" id="progress"></div></div><div id="questions"></div><div class="card row"><button class="btn" onclick="submitAssessment()">Lever vurderingen</button><span class="muted">Du kan gå tilbake og endre svar før du leverer.</span></div></div>
+<div id="result" class="hidden"></div>
+</section>
+</main>
+<script>
+const IONS=[['Li',1,3],['Na',1,11],['K',1,19],['Mg',2,12],['Ca',2,20],['Al',3,13],['Ga',3,31],['N',-3,7],['P',-3,15],['As',-3,33],['O',-2,8],['S',-2,16],['Se',-2,34],['F',-1,9],['Cl',-1,17],['Br',-1,35]];
+const Q={Li:1,Na:1,K:1,Mg:2,Ca:2,Al:3,Ga:3,N:-3,P:-3,As:-3,O:-2,S:-2,Se:-2,F:-1,Cl:-1,Br:-1,I:-1};
+const NAMES={Li:'litium',Na:'natrium',K:'kalium',Mg:'magnesium',Ca:'kalsium',Al:'aluminium',Ga:'gallium',N:'nitrogen',P:'fosfor',As:'arsen',O:'oksygen',S:'svovel',Se:'selen',F:'fluor',Cl:'klor',Br:'brom',I:'jod',H:'hydrogen',C:'karbon',Si:'silisium'};
+const IONIC=[['Li','F'],['Li','Cl'],['Li','Br'],['Li','I'],['Na','F'],['Na','Cl'],['Na','Br'],['Na','I'],['K','F'],['K','Cl'],['K','Br'],['K','I'],['Mg','O'],['Mg','S'],['Ca','O'],['Ca','S'],['Mg','F'],['Mg','Cl'],['Mg','Br'],['Mg','I'],['Ca','F'],['Ca','Cl'],['Ca','Br'],['Ca','I'],['Al','F'],['Al','Cl'],['Al','Br'],['Al','I'],['Li','O'],['Li','S'],['Na','O'],['Na','S'],['K','O'],['K','S'],['Li','N'],['Li','P'],['Na','N'],['Na','P'],['K','N'],['K','P'],['Mg','N'],['Mg','P'],['Ca','N'],['Ca','P'],['Al','O'],['Al','S'],['Al','N'],['Al','P']];
+const COV=[
+{id:'H2',c:{H:2},e:[[0,1,1]]},{id:'F2',c:{F:2},e:[[0,1,1]]},{id:'Cl2',c:{Cl:2},e:[[0,1,1]]},{id:'Br2',c:{Br:2},e:[[0,1,1]]},{id:'I2',c:{I:2},e:[[0,1,1]],new:1},
+{id:'HF',c:{H:1,F:1},e:[[0,1,1]]},{id:'HCl',c:{H:1,Cl:1},e:[[0,1,1]]},{id:'HBr',c:{H:1,Br:1},e:[[0,1,1]]},{id:'HI',c:{H:1,I:1},e:[[0,1,1]],new:1},
+{id:'O2',c:{O:2},e:[[0,1,2]]},{id:'N2',c:{N:2},e:[[0,1,3]]},{id:'H2O',c:{O:1,H:2}},{id:'H2S',c:{S:1,H:2}},{id:'CO2',c:{C:1,O:2}},
+{id:'NH3',c:{N:1,H:3}},{id:'PH3',c:{P:1,H:3}},{id:'NF3',c:{N:1,F:3}},{id:'PCl3',c:{P:1,Cl:3}},{id:'PBr3',c:{P:1,Br:3},new:1},
+{id:'CH4',c:{C:1,H:4}},{id:'SiH4',c:{Si:1,H:4}},{id:'CF4',c:{C:1,F:4}},{id:'CCl4',c:{C:1,Cl:4}},{id:'SiF4',c:{Si:1,F:4}},{id:'SiCl4',c:{Si:1,Cl:4},new:1},
+{id:'C2H6',c:{C:2,H:6},cc:[1]},{id:'C2H4',c:{C:2,H:4},cc:[2]},{id:'C2H2',c:{C:2,H:2},cc:[3]},
+{id:'C3H8',c:{C:3,H:8},cc:[1,1]},{id:'C3H6',c:{C:3,H:6},cc:[2,1],new:1},{id:'C3H4',c:{C:3,H:4},cc:[3,1],new:1}
+];
+const POLAR=[
+{id:'HCl',d:'easy',shift:'Cl',neg:'Cl',bond:'polar',mol:'ja'},{id:'HF',d:'easy',shift:'F',neg:'F',bond:'polar',mol:'ja'},{id:'HBr',d:'easy',shift:'Br',neg:'Br',bond:'polar',mol:'ja'},
+{id:'Cl2',d:'easy',shift:'midten',neg:'ingen',bond:'upolar',mol:'nei'},{id:'O2',d:'easy',shift:'midten',neg:'ingen',bond:'upolar',mol:'nei'},{id:'N2',d:'easy',shift:'midten',neg:'ingen',bond:'upolar',mol:'nei'},
+{id:'H2O',d:'medium',shift:'O',neg:'O',bond:'polar',mol:'ja'},{id:'NH3',d:'medium',shift:'N',neg:'N',bond:'polar',mol:'ja'},{id:'H2S',d:'medium',shift:'S',neg:'S',bond:'polar',mol:'ja'},
+{id:'CO2',d:'hard',shift:'O',neg:'O',bond:'polar',mol:'nei'},{id:'CH4',d:'hard',shift:'midten',neg:'ingen',bond:'upolar',mol:'nei'},{id:'CF4',d:'hard',shift:'F',neg:'F',bond:'polar',mol:'nei'}];
+
+const forms={
+ion:['Tilfeldig','Ionsymbol gitt','Protoner og elektroner gitt'],
+ionic:['Tilfeldig','Bygg formelen','Finn ioner + formel'],
+cov:['Tilfeldig','Bygg fra atomantall','Bygg fra kjemisk formel'],
+polar:['Tilfeldig','Fire spørsmål om polaritet']
+};
+let rowId=0;
+function addRow(type='ion',diff='medium',form='Tilfeldig'){
+ const d=document.createElement('div');d.className='taskrow';d.dataset.id=++rowId;
+ d.innerHTML=`<div class="num"></div><div><label>Oppgavetype</label><select class="type" onchange="syncForm(this)"><option value="ion">Bygg ion</option><option value="ionic">Ionebinding</option><option value="cov">Kovalent binding</option><option value="polar">Polar kovalent binding</option></select></div><div><label>Vanskelighetsgrad</label><select class="diff"><option value="easy">Enkel</option><option value="medium">Middels</option><option value="hard">Krevende</option></select></div><div><label>Oppgaveform</label><select class="form"></select></div><button class="btn ghost remove" onclick="this.parentElement.remove();renumber()">×</button>`;
+ document.querySelector('#rows').appendChild(d);d.querySelector('.type').value=type;d.querySelector('.diff').value=diff;syncForm(d.querySelector('.type'),form);renumber()
+}
+function syncForm(sel,want){let f=sel.closest('.taskrow').querySelector('.form');f.innerHTML=forms[sel.value].map(x=>`<option>${x}</option>`).join('');if(want)f.value=want}
+function renumber(){[...document.querySelectorAll('.taskrow')].forEach((r,i)=>r.querySelector('.num').textContent=i+1)}
+addRow('ion','medium');addRow('ionic','medium');addRow('ionic','hard');addRow('cov','medium','Bygg fra atomantall');addRow('cov','hard');addRow('polar','medium');
+
+function hash(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return h>>>0}
+function rng(seed){let x=seed>>>0;return()=>{x+=0x6D2B79F5;let t=x;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return((t^t>>>14)>>>0)/4294967296}}
+function pick(a,r){return a[Math.floor(r()*a.length)]}
+function gcd(a,b){while(b)[a,b]=[b,a%b];return a}
+function formula(a,b){let qa=Math.abs(Q[a]),qb=Math.abs(Q[b]),g=gcd(qa,qb),na=qb/g,nb=qa/g;return a+(na>1?na:'')+b+(nb>1?nb:'')}
+function covLevel(m){if(/^C3/.test(m.id)||/^C2/.test(m.id))return'hard';if(['H2O','H2S','CO2','NH3','PH3','NF3','PCl3','PBr3','CH4','SiH4','CF4','CCl4','SiF4','SiCl4'].includes(m.id))return'medium';return'easy'}
+function ionicLevel(p){let a=Math.abs(Q[p[0]]),b=Math.abs(Q[p[1]]),mx=Math.max(a,b);if(a===b)return'easy';if(mx===2)return'medium';return'hard'}
+function ionLevel(x){let q=Math.abs(x[1]);return q===1?'easy':q===2?'medium':'hard'}
+function poolFor(type,diff){if(type==='ion')return IONS.filter(x=>ionLevel(x)===diff);if(type==='ionic')return IONIC.filter(x=>ionicLevel(x)===diff);if(type==='cov')return COV.filter(x=>covLevel(x)===diff);return POLAR.filter(x=>x.d===diff)}
+function taskLabel(t){if(t.type==='ion')return`Bygg ion · ${ionHTML(t.data[0],t.data[1])}`;if(t.type==='ionic')return`Ionebinding · ${t.data[0]} + ${t.data[1]}`;if(t.type==='cov')return`Kovalent · ${fmt(t.data.id)}`;return`Polaritet · ${fmt(t.data.id)}`}
+function ionHTML(s,q){return s+(Math.abs(q)===1?'':Math.abs(q))+(q>0?'+':'−')}
+function fmt(s){return String(s).replace(/\d/g,d=>'₀₁₂₃₄₅₆₇₈₉'[Number(d)])}
+function config(){return{v:1,title:document.querySelector('#title').value.trim()||'Minivurdering',feedback:document.querySelector('#feedback').value,visibility:document.querySelector('#visibility').value,slots:[...document.querySelectorAll('.taskrow')].map(r=>({type:r.querySelector('.type').value,diff:r.querySelector('.diff').value,form:r.querySelector('.form').value}))}}
+function buildVariants(c,seed){let out={};'ABCDE'.split('').forEach((letter,vi)=>{let r=rng(hash(seed+letter)),used=new Set();out[letter]=c.slots.map((s,i)=>{let p=poolFor(s.type,s.diff);let avail=p.filter(x=>!used.has(s.type+JSON.stringify(x)));if(!avail.length)avail=p;let data=pick(avail,r);used.add(s.type+JSON.stringify(data));let form=s.form==='Tilfeldig'?pick(forms[s.type].slice(1),r):s.form;return{type:s.type,diff:s.diff,form,data}})});return out}
+function enc(o){return btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replaceAll('+','-').replaceAll('/','_').replaceAll('=','')}
+function dec(x){return JSON.parse(decodeURIComponent(escape(atob(x.replaceAll('-','+').replaceAll('_','/').padEnd(Math.ceil(x.length/4)*4,'=')))))}
+
+function previewText(t){
+ if(t.type==='ion'){
+  let [s,q,z]=t.data,e=z-q;
+  if(t.form==='Protoner og elektroner gitt')return {given:`${z} protoner og ${e} elektroner`,doit:'Identifiser ionet og angi riktig ladning.'};
+  return {given:`Ionet ${ionHTML(s,q)}`,doit:'Angi riktig antall protoner, elektroner og elektronskall.'};
+ }
+ if(t.type==='ionic'){
+  let [a,b]=t.data;
+  if(t.form==='Finn ioner + formel')return {given:`${NAMES[a]} (${a}) og ${NAMES[b]} (${b})`,doit:'Finn ioneladningene og bygg riktig kjemisk formel.'};
+  return {given:`${NAMES[a]} (${a}) og ${NAMES[b]} (${b})`,doit:'Bygg den elektrisk nøytrale kjemiske formelen.'};
+ }
+ if(t.type==='cov'){
+  let m=t.data, els=Object.keys(m.c);
+  if(t.form==='Bygg fra kjemisk formel')return {given:`Formelen ${fmt(m.id)}`,doit:'Bygg molekylet og legg inn riktige bindinger mellom atomene.'};
+  return {given:els.map(x=>`${m.c[x]} ${x}`).join(' + '),doit:'Bygg molekylet og legg inn riktige bindinger mellom atomene.'};
+ }
+ let m=t.data;
+ return {given:`Molekylet ${fmt(m.id)}`,doit:'Vurder elektronforskyvning, δ−, bindingstype og om hele molekylet er polart.'};
+}
+let currentPreview='A', lastPack=null, lastVariants=null;
+function renderPreview(letter){
+ currentPreview=letter;
+ document.querySelectorAll('#variantTabs .tab').forEach(b=>b.classList.toggle('active',b.dataset.v===letter));
+ let list=lastVariants[letter];
+ document.querySelector('#variants').innerHTML=`<div class="variant"><div class="varianthead"><b>Variant ${letter}</b><span class="pill">${list.length} oppgaver</span></div>${list.map((t,i)=>{let p=previewText(t);return `<div class="previewtask"><h3>${i+1}. ${typeName(t.type)} <span class="tag">${diffName(t.diff)}</span></h3><p><strong>Eleven får:</strong> ${p.given}</p><p><strong>Eleven skal:</strong> ${p.doit}</p><p style="font-size:12px"><span class="tag">${t.form}</span></p></div>`}).join('')}</div>`;
+}
+function setPreview(pack,vs){
+ lastPack=pack;lastVariants=vs;
+ document.querySelector('#variantTabs').innerHTML='ABCDE'.split('').map(L=>`<button class="tab ${L===currentPreview?'active':''}" data-v="${L}" onclick="renderPreview('${L}')">Variant ${L}</button>`).join('');
+ renderPreview(currentPreview);
+ let u=new URL(location.href);u.search='?v='+enc(pack);u.hash='';document.querySelector('#shareurl').value=u.href;
+ document.querySelector('#generated').classList.remove('hidden');
+}
+function regenerate(){generate()}
+function generate(){let c=config();if(!c.slots.length)return alert('Legg til minst én oppgave.');let seed=Math.random().toString(36).slice(2,10),pack={c,seed};let vs=buildVariants(c,seed);currentPreview='A';setPreview(pack,vs);document.querySelector('#generated').scrollIntoView({behavior:'smooth',block:'start'})}
+async function copyLink(){try{await navigator.clipboard.writeText(document.querySelector('#shareurl').value);event.target.textContent='Kopiert!';setTimeout(()=>event.target.textContent='Kopier lenke',1200)}catch(e){document.querySelector('#shareurl').select();document.execCommand('copy')}}
+let PACK=null,VARIANT=null,VTASKS=[],exits=0,started=false;
+function boot(){let p=new URLSearchParams(location.search).get('v');if(!p)return;try{PACK=dec(p)}catch(e){return}document.querySelector('#teacher').classList.add('hidden');document.querySelector('#student').classList.remove('hidden');document.querySelector('#stitle').textContent=PACK.c.title;document.querySelector('#intro').textContent=`${PACK.c.slots.length} oppgaver · én av fem likeverdige varianter`;document.querySelector('#assessmentCodeTop').textContent='Kode '+PACK.seed.toUpperCase();document.querySelector('#visnote').classList.toggle('hidden',PACK.c.visibility==='off')}
+function assessmentKey(){return'assess-'+hash(JSON.stringify(PACK))}
+function startAssessment(){let k=assessmentKey(),saved=localStorage.getItem(k);if(saved){let x=JSON.parse(saved);VARIANT=x.variant;exits=x.exits||0}else{VARIANT='ABCDE'[Math.floor(Math.random()*5)];localStorage.setItem(k,JSON.stringify({variant:VARIANT,exits:0}))}VTASKS=buildVariants(PACK.c,PACK.seed)[VARIANT];started=true;document.querySelector('#studentStart').classList.add('hidden');document.querySelector('#quiz').classList.remove('hidden');document.querySelector('#qtitle').textContent=PACK.c.title;document.querySelector('#progress').textContent=`Variant ${VARIANT} · ${VTASKS.length} oppgaver`;renderQuestions()}
+document.addEventListener('visibilitychange',()=>{if(started&&PACK?.c.visibility==='on'&&document.hidden){exits++;localStorage.setItem(assessmentKey(),JSON.stringify({variant:VARIANT,exits}))}});
+function renderQuestions(){document.querySelector('#questions').innerHTML=VTASKS.map((t,i)=>renderTask(t,i)).join('')}
+function renderTask(t,i){let body='';if(t.type==='ion')body=ionTask(t,i);if(t.type==='ionic')body=ionicTask(t,i);if(t.type==='cov')body=covTask(t,i);if(t.type==='polar')body=polarTask(t,i);return`<section class="card q" data-i="${i}"><div class="qhead"><div><div class="eyebrow">OPPGAVE ${i+1}</div><h2>${typeName(t.type)}</h2></div><span class="pill">${diffName(t.diff)}</span></div>${body}</section>`}
+function typeName(x){return{ion:'Bygg ion',ionic:'Ionebinding',cov:'Kovalent binding',polar:'Polar kovalent binding'}[x]}
+function diffName(x){return{easy:'Enkel',medium:'Middels',hard:'Krevende'}[x]}
+function ionTask(t,i){let [s,q,z]=t.data,e=z-q;if(t.form==='Protoner og elektroner gitt')return`<p>Et ion har <strong>${z} protoner</strong> og <strong>${e} elektroner</strong>. Angi hvilket ion dette er.</p><div class="grid"><div class="span6"><label>Grunnstoffsymbol</label><input data-a="sym" type="text"></div><div class="span6"><label>Ladning (f.eks. -2 eller 3)</label><input data-a="charge" type="number"></div></div>`;return`<p>Bygg <strong>${ionHTML(s,q)}</strong> ved å angi partikkeltallene.</p><div class="grid"><div class="span4"><label>Protoner</label><input data-a="p" type="number"></div><div class="span4"><label>Elektroner</label><input data-a="e" type="number"></div><div class="span4"><label>Antall elektronskall</label><input data-a="shells" type="number"></div></div>`}
+function ionicTask(t,i){let[a,b]=t.data;if(t.form==='Finn ioner + formel')return`<p>Grunnstoffene <strong>${NAMES[a]}</strong> (${a}) og <strong>${NAMES[b]}</strong> (${b}) danner en ioneforbindelse. Angi ioneladningene og formelen.</p><div class="grid"><div class="span4"><label>Ladning ${a}</label><input data-a="qa" type="number"></div><div class="span4"><label>Ladning ${b}</label><input data-a="qb" type="number"></div><div class="span4"><label>Kjemisk formel</label><input data-a="formula" type="text"></div></div>`;return`<p>Bygg den elektrisk nøytrale forbindelsen mellom <strong>${NAMES[a]}</strong> (${a}) og <strong>${NAMES[b]}</strong> (${b}).</p><label>Kjemisk formel</label><input data-a="formula" type="text" placeholder="Skriv formelen">`}
+function covTask(t,i){let m=t.data,els=Object.keys(m.c),countText=els.map(x=>`${m.c[x]} ${x}`).join(' + ');let prompt=t.form==='Bygg fra kjemisk formel'?`Bygg molekylet <strong>${fmt(m.id)}</strong>.`:`Bygg et molekyl med <strong>${countText}</strong>.`;return`${prompt}<p class="muted">Legg til atomer. Velg bindingstype og klikk på to atomer. Ingen tilbakemelding gis før innlevering.</p><div class="row">${els.map(x=>`<button class="btn secondary" type="button" onclick="addAtom(${i},'${x}')">+ ${x}</button>`).join('')}<button class="btn ghost" type="button" onclick="clearMol(${i})">Tøm</button></div><div class="row" style="margin-top:10px"><select data-a="bondtool"><option value="1">Enkeltbinding</option><option value="2">Dobbeltbinding</option><option value="3">Trippelbinding</option></select><span class="muted">Klikk atom 1 → atom 2</span></div><div class="atomarea" data-atoms></div><div class="bonds" data-bonds>Ingen bindinger lagt inn.</div><input data-a="molstate" type="hidden" value='{"atoms":[],"edges":[]}'/>`}
+function polarTask(t,i){let m=t.data,opts=['H','C','N','O','F','S','Cl','Br','ingen'];return`<p>Undersøk <strong>${fmt(m.id)}</strong>. Svar på alle fire spørsmålene.</p><div class="grid"><div class="span6"><label>Hvor forskyves de delte elektronene?</label><select data-a="shift"><option value="">Velg</option>${['H','C','N','O','F','S','Cl','Br','midten'].map(x=>`<option>${x}</option>`).join('')}</select></div><div class="span6"><label>Hvilket atom får δ−?</label><select data-a="neg"><option value="">Velg</option>${opts.map(x=>`<option>${x}</option>`).join('')}</select></div><div class="span6"><label>Bindingstype</label><select data-a="bond"><option value="">Velg</option><option value="polar">Polar kovalent</option><option value="upolar">Upolar kovalent</option></select></div><div class="span6"><label>Er hele molekylet polart?</label><select data-a="mol"><option value="">Velg</option><option value="ja">Ja</option><option value="nei">Nei</option></select></div></div>`}
+let selAtoms={};
+function molBox(i){return document.querySelector(`.q[data-i="${i}"]`)}
+function molState(i){let q=molBox(i),inp=q.querySelector('[data-a=molstate]');return [q,inp,JSON.parse(inp.value)]}
+function addAtom(i,s){let[q,inp,st]=molState(i);st.atoms.push(s);inp.value=JSON.stringify(st);drawMol(i)}
+function clearMol(i){let[q,inp]=molState(i);inp.value='{"atoms":[],"edges":[]}';selAtoms[i]=null;drawMol(i)}
+function atomClick(i,a){let[q,inp,st]=molState(i);if(selAtoms[i]==null){selAtoms[i]=a;drawMol(i);return}if(selAtoms[i]===a){selAtoms[i]=null;drawMol(i);return}let b=selAtoms[i],order=+q.querySelector('[data-a=bondtool]').value;st.edges=st.edges.filter(e=>!((e[0]===a&&e[1]===b)||(e[0]===b&&e[1]===a)));st.edges.push([b,a,order]);inp.value=JSON.stringify(st);selAtoms[i]=null;drawMol(i)}
+function drawMol(i){let[q,inp,st]=molState(i);q.querySelector('[data-atoms]').innerHTML=st.atoms.map((s,a)=>`<button type="button" class="atom ${selAtoms[i]===a?'sel':''}" onclick="atomClick(${i},${a})">${s}</button>`).join('');q.querySelector('[data-bonds]').textContent=st.edges.length?st.edges.map(e=>`${e[0]+1}–${e[1]+1}: ${['','enkelt','dobbelt','trippel'][e[2]]}`).join(' · '):'Ingen bindinger lagt inn.'}
+function val(q,k){return q.querySelector(`[data-a="${k}"]`)?.value?.trim()??''}
+function shellCount(e){return e<=2?1:e<=10?2:e<=18?3:4}
+function grade(t,i){let q=molBox(i);if(t.type==='ion'){let[s,c,z]=t.data,e=z-c;if(t.form==='Protoner og elektroner gitt')return val(q,'sym')===s&&+val(q,'charge')===c;return +val(q,'p')===z&&+val(q,'e')===e&&+val(q,'shells')===shellCount(e)}
+if(t.type==='ionic'){let[a,b]=t.data,ok=val(q,'formula').replace(/\s/g,'').toLowerCase()===formula(a,b).toLowerCase();if(t.form==='Finn ioner + formel')ok=ok&&+val(q,'qa')===Q[a]&&+val(q,'qb')===Q[b];return ok}
+if(t.type==='polar'){let m=t.data;return val(q,'shift')===m.shift&&val(q,'neg')===m.neg&&val(q,'bond')===m.bond&&val(q,'mol')===m.mol}
+if(t.type==='cov')return gradeMol(t.data,JSON.parse(val(q,'molstate')||'{"atoms":[],"edges":[]}'));return false}
+function gradeMol(m,st){let want=m.c,got={};st.atoms.forEach(x=>got[x]=(got[x]||0)+1);if(JSON.stringify(Object.keys(want).sort().map(k=>[k,want[k]]))!==JSON.stringify(Object.keys(got).sort().map(k=>[k,got[k]])))return false;
+let deg=st.atoms.map(()=>0);for(let[a,b,o]of st.edges){if(a===b||a>=st.atoms.length||b>=st.atoms.length)return false;deg[a]+=o;deg[b]+=o}
+let target={H:1,F:1,Cl:1,Br:1,I:1,O:2,S:2,N:3,P:3,C:4,Si:4};if(deg.some((d,i)=>d!==target[st.atoms[i]]))return false;
+// connected graph
+let seen=new Set([0]),changed=true;while(changed){changed=false;for(let[a,b]of st.edges){if(seen.has(a)&&!seen.has(b)){seen.add(b);changed=true}if(seen.has(b)&&!seen.has(a)){seen.add(a);changed=true}}}return seen.size===st.atoms.length}
+function submitAssessment(){let results=VTASKS.map((t,i)=>grade(t,i)),score=results.filter(Boolean).length;started=false;document.querySelector('#quiz').classList.add('hidden');let by={};VTASKS.forEach((t,i)=>{by[t.type]??={n:0,r:0};by[t.type].n++;if(results[i])by[t.type].r++});let feedback='';if(PACK.c.feedback==='full'){let weak=Object.entries(by).filter(([k,v])=>v.r<v.n).map(([k])=>typeName(k));feedback=weak.length?`Arbeid videre med: <strong>${weak.join(', ')}</strong>. Se på oppgavene du ikke fikk godkjent, og bruk treningsaktivitetene til å øve på akkurat disse delene.`:'Alle oppgavene ble godkjent. Du viser sikkerhet på områdene som ble vurdert.'}
+let details=Object.entries(by).map(([k,v])=>`<div class="stat">${typeName(k)}<strong>${v.r} / ${v.n}</strong></div>`).join('');
+document.querySelector('#result').innerHTML=`<div class="card"><div class="eyebrow">KJEMI · RESULTAT</div><h1>${PACK.c.title}</h1><div class="score">${score} / ${VTASKS.length}</div><p class="lead">Variant ${VARIANT} · vurderingskode ${PACK.seed.toUpperCase()}</p><div class="resultgrid">${details}<div class="stat">Visningen forlatt<strong>${PACK.c.visibility==='on'?exits:'—'}</strong></div></div>${feedback?`<div class="notice" style="margin-top:18px">${feedback}</div>`:''}<p class="muted">Ta skjermbilde av denne resultatsiden og send det til læreren slik dere har avtalt.</p><div class="no-print"><button class="btn secondary" onclick="window.print()">Skriv ut / lagre som PDF</button></div></div>`;document.querySelector('#result').classList.remove('hidden');window.scrollTo(0,0)}
+boot();
+</script></body></html>
