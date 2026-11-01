@@ -85,7 +85,7 @@ function finish(){attemptState={status:'completed',variant:variantLetter};if(att
 function assessmentReport(){const slots=PACK.variants[variantLetter];return {ElevID:studentIdentity?.elevID||'',ProveID:PACK.seed,Variant:variantLetter,Poeng:scores.reduce((a,x)=>a+(x?.earned||0),0),MaksPoeng:scores.reduce((a,x)=>a+(x?.max||0),0),BesvarelseJSON:JSON.stringify({tittel:PACK.title,identitet:studentIdentity,oppgaver:slots.map((slot,i)=>({type:slot.type,maal:slot.target,resultat:scores[i]})),forlotVisning:leftCount}),AntallFokusbrudd:PACK.track==='yes'?leftCount:0};}
 
 // Sett inn et godkjent mottak her før publisering. Ikke publiser en hemmelig Power Automate-URL på GitHub.
-    const ASSESSMENT_ENDPOINT = 'https://default4d6d8a9010fd4f788fc15e28844e02.92.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/07/workflows/b3ea4d7d30574433a9a52599bc18ccbb/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=kTSl8QHR7U5b0PwU0kMQqkdxSiRoKdYMt-7nJR0SlWc';
+    const ASSESSMENT_ENDPOINT = '...Sett inn lenken fra power automate her...';
 let submissionInProgress = false;
 async function sendAssessmentReport(){
   const box=document.getElementById('deliveryStatus');
